@@ -13,7 +13,7 @@ usersRouter.use(express.json());
 
 
 // GET 
-usersRouter.get('/:username', async (req: Request, res: Response)=>{
+usersRouter.get('/users/:username', async (req: Request, res: Response)=>{
 
     const userName = req?.params?.username;
     try{
@@ -47,9 +47,32 @@ usersRouter.post('/users', async (req: Request, res: Response ) => {
     }
 } )
 
-
-
 // PUT
+usersRouter.put("/users/:username", async(req: Request, res: Response) => {
+    const userName = req?.params?.username;
+
+    try{
+        const updatedUser: User = req.body as User;
+        const query = { username: userName};
+
+
+        const result = await collections.users.updateOne(query, {$set: updatedUser});
+
+        result
+            ? res.status(200).send(`Successfully updated game with id ${userName}`)
+            : res.status(304).send(`Game with id: ${userName} not updated`);
+
+    }
+    catch(error) {
+        console.error(error.message);
+        res.status(400).send(error.message);
+    }
+})
+
+
+
+
+
 
 // DELETE
 
