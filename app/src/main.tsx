@@ -1,14 +1,14 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import {createBrowserRouter, RouterProvider} from "react-router-dom";
-import Root from './Root.tsx'
+import App from './App.tsx'
 import Note from './components/Note.tsx';
 import './index.css'
 
 const router = createBrowserRouter([
   {
     path:"/",
-    element:<Root />,
+    element:<App />,
     children: [
       {
         path:"/notes/:notesId",

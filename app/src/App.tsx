@@ -3,7 +3,7 @@ import Sidebar from "./components/Sidebar";
 
 
 
-export default function Root(): React.JSX.Element {
+export default function App(): React.JSX.Element {
 
   return (
     <>
