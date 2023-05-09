@@ -13,6 +13,22 @@ usersRouter.use(express.json());
 
 
 // GET 
+usersRouter.get('/:username', async (req: Request, res: Response)=>{
+
+    const userName = req?.params?.username;
+    try{
+
+        const query = { username: userName};
+        const user = (await collections.users.findOne<User>(query)) as User;
+
+        if(!user.id){
+            res.status(200).send(user)
+        }
+    }
+    catch (error) {
+        res.status(404).send(`Unable to find matching user with username: ${req.params.username}`);
+    }
+});
 
 // POST
 usersRouter.post('/users', async (req: Request, res: Response ) => {
