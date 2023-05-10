@@ -35,11 +35,18 @@ usersRouter.post('', async (req: Request, res: Response ) => {
 
     try {
         const newUser = req.body as User;
-        const result = await collections.users.insertOne(newUser);
-            result
-                ? res.status(201).send(`Successfully created a new user with id ${result.insertedId}.`)
-                : res.status(500).send('Failed to create new user.')
+        const query = {userName: newUser.userName};
+        const isUser = await collections.users.findOne<User>(query) as User;
+        if(!isUser){
+            const result = await collections.users.insertOne(newUser);
+                result
+                    ? res.status(201).send(`Successfully created a new user with id ${result.insertedId}.`)
+                    : res.status(500).send('Failed to create new user.')
+            }
+        else{
+            res.status(409).send('Username already exists in the database')
         }
+    }
     catch(error) {
         console.error(error);
         res.status(400).send(error.message);
