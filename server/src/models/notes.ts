@@ -1,5 +1,5 @@
 import { ObjectId} from "mongodb";
-import User from "./users";
+import User from "./users.js";
 
 
 

@@ -1,7 +1,7 @@
 //External Dependencies
 import express, {Request, Response} from 'express';
-import {collections} from '../services/database.service';
-import User from "../models/users";
+import {collections} from '../services/database.service.js';
+import User from "../models/users.js";
 
 
 
@@ -13,12 +13,12 @@ usersRouter.use(express.json());
 
 
 // GET 
-usersRouter.get('/users/:username', async (req: Request, res: Response)=>{
+usersRouter.get('/:username', async (req: Request, res: Response)=>{
 
     const userName = req?.params?.username;
-    try{
 
-        const query = { username: userName};
+    try{
+        const query = { userName: userName};
         const user = (await collections.users.findOne<User>(query)) as User;
 
         if(!user.id){
@@ -26,28 +26,20 @@ usersRouter.get('/users/:username', async (req: Request, res: Response)=>{
         }
     }
     catch (error) {
-        res.status(404).send(`Unable to find matching user with username: ${req.params.username}`);
+        res.status(404).send(`Could not find user with username ${userName}`);
     }
 });
 
 // POST
-usersRouter.post('/users', async (req: Request, res: Response ) => {
+usersRouter.post('', async (req: Request, res: Response ) => {
 
     try {
         const newUser = req.body as User;
-        const query = { username: newUser.userName}
-        const potentialUser = (await collections.users.findOne<User>(query)) as User;
-
-        if(!potentialUser.userName){
-            const result = await collections.users.insertOne(newUser);
+        const result = await collections.users.insertOne(newUser);
             result
                 ? res.status(201).send(`Successfully created a new user with id ${result.insertedId}.`)
                 : res.status(500).send('Failed to create new user.')
         }
-        else{
-            res.status(500).send('Failed to create new user.')
-        }
-    }
     catch(error) {
         console.error(error);
         res.status(400).send(error.message);
@@ -55,12 +47,12 @@ usersRouter.post('/users', async (req: Request, res: Response ) => {
 } )
 
 // PUT
-usersRouter.put("/users/:username", async(req: Request, res: Response) => {
+usersRouter.put("/:username", async(req: Request, res: Response) => {
     const userName = req?.params?.username;
 
     try{
         const updatedUser: User = req.body as User;
-        const query = { username: userName};
+        const query = { userName: userName};
 
 
         const result = await collections.users.updateOne(query, {$set: updatedUser});
@@ -77,11 +69,11 @@ usersRouter.put("/users/:username", async(req: Request, res: Response) => {
 })
 
 // DELETE
-usersRouter.delete("/users/:username", async(req: Request, res: Response) => {
+usersRouter.delete("/:username", async(req: Request, res: Response) => {
     const userName = req?.params?.username;
 
     try{
-        const query = { username: userName};
+        const query = { userName: userName};
         const result = await collections.users.deleteOne(query);
 
         if(result && result.deletedCount){

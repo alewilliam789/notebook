@@ -5,19 +5,17 @@ import * as dotenv from "dotenv";
 
 
 // Global Variables
+dotenv.config();
 const username = encodeURIComponent("alewilliam789");
 const password = encodeURIComponent(process.env.PASSWORD);
 const cluster = "cluster0.uf3j3h7.mongodb.net";
-const authSource = "retryWrites=true";
-const authMechanism = "w=majority";
 let uri =
-  `mongodb+srv://${username}:${password}@${cluster}/?authSource=${authSource}&authMechanism=${authMechanism}`;
+  `mongodb+srv://${username}:${password}@${cluster}/?retryWrites=true&w=majority`;
 
 export const collections : {notes?: mongoDB.Collection, users?: mongoDB.Collection} = {};
 
 
 export async function connectToDatabase(){
-    dotenv.config();
     
     const client: mongoDB.MongoClient = new mongoDB.MongoClient(uri);
     

@@ -1,6 +1,6 @@
 import express from "express";
-import { connectToDatabase } from "./services/database.service";
-import { usersRouter } from "./routes/users.router";
+import { connectToDatabase } from "./services/database.service.js";
+import { usersRouter } from "./routes/users.router.js";
 
 const port = process.env.PORT;
 const app = express();
