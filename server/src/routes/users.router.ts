@@ -1,6 +1,6 @@
 //External Dependencies
 import express, {Request, Response} from 'express';
-import {collections} from "../services/database.service";
+import {collections} from '../services/database.service';
 import User from "../models/users";
 
 
