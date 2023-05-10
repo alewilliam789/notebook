@@ -1,13 +1,16 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "./dist/index.js",
+  "type": "module",
   "scripts": {
     "build": "tsc",
-    "start": "ts-node-transpile-only ./index.ts"
+    "start": "node dist/index.js",
+    "dev": "npx tsc -w & nodemon dist/index.js"
   },
   "dependencies": {
     "dotenv": "^16.0.3",
+    "express": "^4.18.2",
     "mongodb": "^5.4.0",
     "typescript": "^5.0.4"
   },
