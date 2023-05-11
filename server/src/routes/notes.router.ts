@@ -16,12 +16,13 @@ notesRouter.use(express.json());
 // GET 
 
 // GET all notes for a user
-notesRouter.get('/:noteId', async (req: Request, res: Response)=>{
+notesRouter.get('/:userid', async (req: Request, res: Response)=>{
 
-    const noteId = req?.params?.noteId;
+    const userId = req?.params?.userId;
+
 
     try{
-        const query = { user_id: noteId};
+        const query = { user_id: userId};
         const notes = (await collections.notes.findOne<Notes[]>(query)) as Notes[];
 
         if(!notes){
