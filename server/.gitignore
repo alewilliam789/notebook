@@ -8,10 +8,11 @@ pnpm-debug.log*
 lerna-debug.log*
 
 node_modules
+dist
+dist-ssr
 *.local
 package-lock.json
 .env
-dist
 
 
 # Editor directories and files
@@ -24,5 +25,3 @@ dist
 *.njsproj
 *.sln
 *.sw?
-
-
