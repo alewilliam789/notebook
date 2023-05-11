@@ -18,33 +18,30 @@ notesRouter.use(express.json());
 // GET all notes for a user
 notesRouter.get('/:userid', async (req: Request, res: Response)=>{
 
-    const userId = req?.params?.userId;
-
+    const userId = req?.params?.userid;
 
     try{
         const query = { user_id: userId};
-        const notes = (await collections.notes.findOne<Notes[]>(query)) as Notes[];
+        const notes = (await collections.notes.find<{}>(query).toArray()) as Notes[];
 
-        if(!notes){
-            res.status(200).send(notes)
-        }
+        res.status(200).send(notes)
     }
     catch (error) {
-        res.status(404).send(`Could not find notes for user`);
+        res.status(404).send(`Could not find notes for user with user_id: ${userId}`);
     }
 });
 
 // GET specific note
-notesRouter.get('/:noteid', async (req: Request, res: Response)=>{
+notesRouter.get('/note/:noteid', async (req: Request, res: Response)=>{
 
     const noteId = req?.params?.noteid;
 
 
     try{
-        const query = { _id: new ObjectId(noteId)};
+        const query = { _id : new ObjectId(noteId)};
         const note = (await collections.notes.findOne<Notes>(query)) as Notes;
 
-        if(!note){
+        if(note){
             res.status(200).send(note)
         }
     }
