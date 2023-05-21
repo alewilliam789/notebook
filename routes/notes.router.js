@@ -7,7 +7,7 @@ export const notesRouter = express.Router();
 notesRouter.use(express.json());
 // GET 
 // GET all notes for a user
-notesRouter.get('/:userid', async (req, res) => {
+notesRouter.get('/:username', async (req, res) => {
     const userId = req?.params?.userid;
     try {
         const query = { user_id: userId };
