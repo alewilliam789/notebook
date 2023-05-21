@@ -8,7 +8,7 @@ export default class Notes {
     constructor(
         public title: string,
         public body: string,
-        public user_id: string,
+        public userName: string,
         public id?: ObjectId,
     ) {}
 }
