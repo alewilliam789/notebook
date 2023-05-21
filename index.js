@@ -2,7 +2,7 @@ import express from "express";
 import { connectToDatabase } from "./services/database.service.js";
 import { usersRouter } from "./routes/users.router.js";
 import { notesRouter } from "./routes/notes.router.js";
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 3000;
 const app = express();
 connectToDatabase()
     .then(() => {

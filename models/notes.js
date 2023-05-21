@@ -1,12 +1,12 @@
 export default class Notes {
     title;
     body;
-    user_id;
+    userName;
     id;
-    constructor(title, body, user_id, id) {
+    constructor(title, body, userName, id) {
         this.title = title;
         this.body = body;
-        this.user_id = user_id;
+        this.userName = userName;
         this.id = id;
     }
 }
