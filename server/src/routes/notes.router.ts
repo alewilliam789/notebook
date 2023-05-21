@@ -16,7 +16,7 @@ notesRouter.use(express.json());
 // GET 
 
 // GET all notes for a user
-notesRouter.get('/:userid', async (req: Request, res: Response)=>{
+notesRouter.get('/:username', async (req: Request, res: Response)=>{
 
     const userId = req?.params?.userid;
 

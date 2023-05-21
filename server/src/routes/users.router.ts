@@ -2,6 +2,7 @@
 import express, {Request, Response} from 'express';
 import {collections} from '../services/database.service.js';
 import User from "../models/users.js";
+import * as bcrypt from "bcrypt";
 
 
 
@@ -13,20 +14,26 @@ usersRouter.use(express.json());
 
 
 // GET 
-usersRouter.get('/:username', async (req: Request, res: Response)=>{
+usersRouter.get('/login', async (req: Request, res: Response)=>{
 
-    const userName = req?.params?.username;
+    const userLogin: User = req.body;
 
     try{
-        const query = { userName: userName};
+        const query = { userName: userLogin.userName};
         const user = (await collections.users.findOne<User>(query)) as User;
 
-        if(!user.id){
-            res.status(200).send(user)
+        const match = await bcrypt.compare(userLogin.password, user.password);
+        if(match){
+            
+            res.status(200).send('Valid login credentials');
         }
+        else{
+            res.status(401).send('Invalid login credentials');
+        }
+        
     }
     catch (error) {
-        res.status(404).send(`Could not find user with username ${userName}`);
+        res.status(404).send(`Could not find user with username ${userLogin.userName}`);
     }
 });
 
@@ -38,6 +45,9 @@ usersRouter.post('', async (req: Request, res: Response ) => {
         const query = {userName: newUser.userName};
         const isUser = await collections.users.findOne<User>(query) as User;
         if(!isUser){
+            const saltRounds = 10;
+            const hash = bcrypt.hashSync(newUser.password,saltRounds);
+            newUser.password = hash;
             const result = await collections.users.insertOne(newUser);
                 result
                     ? res.status(201).send(`Successfully created a new user with id ${result.insertedId}.`)
