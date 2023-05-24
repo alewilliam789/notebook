@@ -5,25 +5,8 @@ import * as bcrypt from "bcrypt";
 // Global Config
 export const usersRouter = express.Router();
 usersRouter.use(express.json());
-// GET 
-usersRouter.get('/login', async (req, res) => {
-    const userLogin = req.body;
-    try {
-        const query = { userName: userLogin.userName };
-        const user = (await collections.users.findOne(query));
-        const match = await bcrypt.compare(userLogin.password, user.password);
-        if (match) {
-            res.status(200).send('Valid login credentials');
-        }
-        else {
-            res.status(401).send('Invalid login credentials');
-        }
-    }
-    catch (error) {
-        res.status(404).send(`Could not find user with username ${userLogin.userName}`);
-    }
-});
 // POST
+// Add new user
 usersRouter.post('', async (req, res) => {
     try {
         const newUser = req.body;
@@ -45,6 +28,24 @@ usersRouter.post('', async (req, res) => {
     catch (error) {
         console.error(error);
         res.status(400).send(error.message);
+    }
+});
+// Verify current user
+usersRouter.post('/login', async (req, res) => {
+    const userLogin = req.body;
+    try {
+        const query = { userName: userLogin.userName };
+        const user = (await collections.users.findOne(query));
+        const match = await bcrypt.compare(userLogin.password, user.password);
+        if (match) {
+            res.status(200).send('Valid login credentials');
+        }
+        else {
+            res.status(401).send('Invalid login credentials');
+        }
+    }
+    catch (error) {
+        res.status(404).send(`Could not find user with username ${userLogin.userName}`);
     }
 });
 // PUT
