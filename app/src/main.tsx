@@ -4,17 +4,16 @@ import {createBrowserRouter, RouterProvider} from "react-router-dom";
 import App from './App.tsx'
 import Note from './components/Note.tsx';
 import './index.css'
+import Login from './components/Login.tsx';
 
 const router = createBrowserRouter([
   {
     path:"/",
-    element:<App />,
-    children: [
-      {
-        path:"/notes/:notesId",
-        element: <Note />
-      },
-    ]
+    element: <Login />,
+  },
+  {
+    path:"/signup",
+    element:<Login />,
   }
 ]);
 

@@ -1,20 +1,21 @@
+interface NoteProps {
+    id: string,
+    title: string,
+    body: string,
+    userName: string
+}
 
 
+export default function Note(props:NoteProps): React.JSX.Element {
 
-export default function Note(): React.JSX.Element {
-    
-    const note = {
-        title: "First Entry",
-        body: "This is the first entry in the journal"
-    }
 
 return (
     <>
     <div>
-        {note.title}
+        {props.title}
     </div>
     <div>
-        {note.body}
+        {props.body}
     </div>
     </>
 )
