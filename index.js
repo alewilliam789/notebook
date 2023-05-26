@@ -2,8 +2,10 @@ import express from "express";
 import { connectToDatabase } from "./services/database.service.js";
 import { usersRouter } from "./routes/users.router.js";
 import { notesRouter } from "./routes/notes.router.js";
-const port = process.env.PORT || 8080;
+import cors from "cors";
+const port = process.env.PORT || 3000;
 const app = express();
+app.use(cors());
 connectToDatabase()
     .then(() => {
     app.use("/users", usersRouter);
