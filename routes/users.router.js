@@ -7,7 +7,7 @@ export const usersRouter = express.Router();
 usersRouter.use(express.json());
 // POST
 // Add new user
-usersRouter.post('', async (req, res) => {
+usersRouter.post('/register', async (req, res) => {
     try {
         const newUser = req.body;
         const query = { userName: newUser.userName };
@@ -26,12 +26,12 @@ usersRouter.post('', async (req, res) => {
         }
     }
     catch (error) {
-        console.error(error);
         res.status(400).send(error.message);
     }
 });
 // Verify current user
 usersRouter.post('/login', async (req, res) => {
+    console.log(req.body);
     const userLogin = req.body;
     try {
         const query = { userName: userLogin.userName };
