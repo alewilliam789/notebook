@@ -9,7 +9,6 @@ import Notes from "../models/notes.js";
 // Global Config
 export const notesRouter = express.Router();
 
-
 notesRouter.use(express.json());
 
 
