@@ -2,14 +2,8 @@
 import express from 'express';
 import { ObjectId } from 'mongodb';
 import { collections } from '../services/database.service.js';
-import cors from 'cors';
 // Global Config
 export const notesRouter = express.Router();
-const allowedOrigins = ['*'];
-const options = {
-    origin: allowedOrigins
-};
-notesRouter.use(cors(options));
 notesRouter.use(express.json());
 // GET 
 // GET all notes for a user

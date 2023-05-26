@@ -2,14 +2,8 @@
 import express from 'express';
 import { collections } from '../services/database.service.js';
 import * as bcrypt from "bcrypt";
-import cors from 'cors';
 // Global Config
 export const usersRouter = express.Router();
-const allowedOrigins = ['*'];
-const options = {
-    origin: allowedOrigins
-};
-usersRouter.use(cors(options));
 usersRouter.use(express.json());
 // POST
 // Add new user
