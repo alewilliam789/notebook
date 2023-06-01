@@ -9,12 +9,31 @@ export default function Login(){
 
     const {setUserData} = useUserContext();
 
+    const [userVerification, setUserVerification] = useState({
+        isCorrectPassword: true,
+        doesExist: true
+    });
+
     const {register, handleSubmit, formState: {errors}} = useForm(
         {defaultValues: {
             userName : "",
             password : ""
         }}
     );
+
+        function handleUserVerification() : string | undefined{
+            if(!userVerification.isCorrectPassword){
+                return "Sorry that is an incorrect password"
+            }
+            else if(!userVerification.doesExist){
+                return "Sorry we could not find this user"
+            }
+
+            return (errors.password?.message?.toString())
+        }
+
+
+
 
     type FormValues = {
         userName : string;
@@ -30,8 +49,18 @@ export default function Login(){
                             body: JSON.stringify(data),
                         }
                         )
-            if(!response.ok){
-                navigate("/invalid-login");
+            if(response.status == 401){
+                setUserVerification({
+                    ...userVerification,
+                    isCorrectPassword : false
+                })
+            }
+            else if(response.status == 404){
+                setUserVerification({
+                    ...userVerification,
+                    isCorrectPassword : true,
+                    doesExist : false
+                })
             }
             else{
                 setUserData({
@@ -50,7 +79,7 @@ export default function Login(){
             <p className="text-red-600 italic font-thin text-sm">{errors.userName?.message?.toString()}</p>
             
             <input className="border-b-2 border-gray-300 font-mono focus:outline-none" placeholder="Password" type="password" {...register("password", {required: "This field is required"})} />
-            <p className="text-red-600 italic font-thin text-sm">{errors.password?.message?.toString()}</p>
+            <p className="text-red-600 italic font-thin text-sm">{handleUserVerification()}</p>
             <input className="mb-2 p-2 border rounded-xl text-white bg-gradient-to-r from-sky-500 to-indigo-500" type="submit"/>
             <Link className="text-sm text-center" to={"/signup"}>Don't have an account? Sign up!</Link>
     </form>
