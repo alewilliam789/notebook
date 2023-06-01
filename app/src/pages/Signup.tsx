@@ -9,6 +9,8 @@ export default function Signup(){
 
     const {setUserData} = useUserContext();
 
+    const [doesExist, setDoesExist] = useState(false);
+
     const {register, handleSubmit, getValues, formState: {errors}} = useForm(
         {defaultValues: {
             userName : "",
@@ -16,6 +18,18 @@ export default function Signup(){
             confirmPassword: ""
         }}
     );
+
+
+    function handleUserVerification() : string | undefined{
+        
+        if(doesExist){
+            return "This username already exists"
+        }
+        return (errors.confirmPassword?.message?.toString())
+    }
+
+
+
 
     type FormValues = {
         userName : string;
@@ -46,7 +60,10 @@ export default function Signup(){
                         }
                         )
             if(response.status == 409){
-               navigate("/alreadyuser")
+               setDoesExist(true)
+            }
+            else if(response.status == 500){
+                
             }
             else{
                 setUserData({
@@ -69,7 +86,7 @@ export default function Signup(){
             <p className="text-red-600 italic font-thin text-sm">{errors.password?.message?.toString()}</p>
 
             <input className="border-b-2 border-gray-300 font-mono focus:outline-none" placeholder="Confirm Password" type="password" {...register("confirmPassword", {required: "This field is required", validate : validatePassword})} />
-            <p className="text-red-600 italic font-thin text-sm">{errors.confirmPassword?.message?.toString()}</p>
+            <p className="text-red-600 italic font-thin text-sm">{handleUserVerification()}</p>
             <input className="mb-2 p-2 border rounded-xl text-white bg-gradient-to-r from-sky-500 to-indigo-500" type="submit"/>
             <Link className="text-sm text-center" to={"/login"}>Already have an account? Login</Link>
     </form>
