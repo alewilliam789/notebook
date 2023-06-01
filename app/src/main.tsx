@@ -13,21 +13,9 @@ const router = createBrowserRouter([
     element: <Login />,
   },
   {
-    path:"/invalid-login",
-    element: <h1>You do not have an existing username or password.</h1>
-  },
-  {
     path:"/signup",
     element:<Signup />,
   },
-  {
-    path: "/alreadyuser",
-    element: <h1>Looks like you already have a login! Head back to login</h1>
-  },
-  // {
-  //   path: "/invalid-login",
-  //   element: <Login />
-  // },
   {
     path:"/notebook",
     element: <App />,
