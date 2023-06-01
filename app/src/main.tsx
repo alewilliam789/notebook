@@ -6,6 +6,7 @@ import './index.css';
 import Login from './pages/Login.tsx';
 import Signup from './pages/Signup.tsx';
 import { UserProvider } from './context/UserContext.tsx';
+import { NotesProvider } from './context/NotesContext.tsx';
 
 const router = createBrowserRouter([
   {
@@ -25,7 +26,9 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <UserProvider>
-    <RouterProvider router={router} />
+      <NotesProvider>
+        <RouterProvider router={router} />
+      </NotesProvider>
     </UserProvider>
   </React.StrictMode>,
 )

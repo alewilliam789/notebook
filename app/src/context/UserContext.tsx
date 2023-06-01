@@ -1,11 +1,11 @@
 import { ReactNode, createContext, useContext, useState } from "react";
 
 type UserData = {
-    username : string;
+    userName : string;
 }
 
 interface UserContextProps {
-    userData : UserData | null;
+    userData : UserData;
     setUserData: (userData : UserData ) => void;
 }
 
@@ -16,7 +16,9 @@ type ProviderProps = {
 }
 
 export const UserProvider = ({children}: ProviderProps) => {
-    const [userData, setUserData] = useState<UserData | null>(null);
+    const [userData, setUserData] = useState<UserData>({
+        userName : ""
+    });
 
     return <UserContext.Provider value={{userData, setUserData}}>{children}
         </UserContext.Provider>

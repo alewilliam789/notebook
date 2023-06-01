@@ -63,11 +63,11 @@ export default function Signup(){
                setDoesExist(true)
             }
             else if(response.status == 500){
-                
+
             }
             else{
                 setUserData({
-                   username: data.userName 
+                   userName: data.userName 
                 })
                 navigate("/notebook")
             }
