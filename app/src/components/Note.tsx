@@ -1,15 +1,16 @@
+
+
 interface NoteProps {
-    id: string,
+    id?: string,
     title: string,
     body: string,
     userName: string
 }
 
 
-export default function Note(props:NoteProps): React.JSX.Element {
+export default function Note(props: NoteProps) {
 
-
-return (
+return(
     <>
     <div>
         {props.title}

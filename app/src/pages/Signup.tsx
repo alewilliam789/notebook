@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import {useForm} from "react-hook-form";
 import { Link, useNavigate} from "react-router-dom";
-import { useUserContext } from "../context/UserContext";
+import { useCookies } from "react-cookie";
 
 export default function Signup(){
 
     const navigate = useNavigate();
 
-    const {setUserData} = useUserContext();
+    const [cookies, setCookie] = useCookies(['user']);
 
     const [doesExist, setDoesExist] = useState(false);
 
@@ -66,9 +66,14 @@ export default function Signup(){
 
             }
             else{
-                setUserData({
-                   userName: data.userName 
-                })
+                setCookie(
+                    "user",
+                    data.userName,
+                    {
+                        path: '/',
+                        expires: new Date(new Date().getDate() + 1),
+                    }
+                )
                 navigate("/notebook")
             }
         }

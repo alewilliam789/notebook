@@ -1,5 +1,4 @@
-import { Link } from "react-router-dom"
-import { Note, useNotesContext } from "../context/NotesContext"
+import {useNotesContext } from "../context/NotesContext"
 
 
 export default function Sidebar(): React.JSX.Element{
@@ -13,7 +12,7 @@ export default function Sidebar(): React.JSX.Element{
     }
 
     const liList = notesData.Notes.map((note, index) =>{
-        return <Link to={`/notes/${note.id}`}><li value={index} onClick={(event)=>{handleClick(event.currentTarget.value)}} key={note.id}>{note.title}</li></Link>
+        return <li value={index} onClick={(event)=>{handleClick(event.currentTarget.value)}} key={index}>{note.title}</li>
     
     })
 

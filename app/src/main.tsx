@@ -5,8 +5,9 @@ import App from './App.tsx';
 import './index.css';
 import Login from './pages/Login.tsx';
 import Signup from './pages/Signup.tsx';
-import { UserProvider } from './context/UserContext.tsx';
 import { NotesProvider } from './context/NotesContext.tsx';
+import Notepad from './components/Notepad.tsx';
+import { CookiesProvider } from 'react-cookie';
 
 const router = createBrowserRouter([
   {
@@ -20,15 +21,21 @@ const router = createBrowserRouter([
   {
     path:"/notebook",
     element: <App />,
-  },
+    children: [
+      {
+        path: "notebook/notes",
+        element: <Notepad />,
+      } 
+    ],
+  }
 ]);
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <UserProvider>
+    <CookiesProvider>
       <NotesProvider>
         <RouterProvider router={router} />
       </NotesProvider>
-    </UserProvider>
+    </CookiesProvider>
   </React.StrictMode>,
 )
