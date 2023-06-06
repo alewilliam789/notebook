@@ -1,9 +1,10 @@
-import { Outlet } from "react-router";
 import Sidebar from "./components/Sidebar";
+import Notepad from "./components/Notepad";
 
 
 
 export default function App(): React.JSX.Element {
+
 
   return (
     <>
@@ -12,7 +13,7 @@ export default function App(): React.JSX.Element {
         <Sidebar />
       </nav>
       <main>
-        <Outlet />
+        <Notepad />
       </main>
     </section>
     </>

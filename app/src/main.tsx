@@ -23,7 +23,7 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       {
-        path: "notebook/notes",
+        path: "notes",
         element: <Notepad />,
       } 
     ],

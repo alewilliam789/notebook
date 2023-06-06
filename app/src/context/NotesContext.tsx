@@ -2,7 +2,7 @@ import { ReactNode, createContext, useContext, useState, useEffect, useRef, Muta
 import { useCookies } from "react-cookie";
 
 export interface Note  {
-    id : string;
+    id? : string;
     title: string;
     body: string;
     userName: string;
@@ -14,9 +14,11 @@ type NotesData = {
 
 interface NotesContextProps {
     notesData : NotesData;
+    currentNote : Note;
     noteRef : MutableRefObject<number | null>;
-    handleClick : (noteRef : number) => MutableRefObject<number | null>;
+    handleClick : (noteRef : number) => void;
     setNotesData: (notesData : NotesData ) => void;
+    setCurrentNote : (note : Note) => void;
 
 }
 
@@ -31,17 +33,25 @@ export const NotesProvider = ({children}: ProviderProps) => {
         Notes: []
     });
 
-    const noteRef = useRef<number | null>(null)
+    const noteRef = useRef<number>(0)
 
     const [cookies] = useCookies(['user']);
+
+    const [currentNote, setCurrentNote] =  useState<Note>(notesData.Notes[noteRef.current]);
 
     
 
 
     function handleClick(noteIndex: number){
         noteRef.current = noteIndex
-        return noteRef
+        setCurrentNote((prevNote) => {
+            return {
+                ...prevNote,
+                ...notesData.Notes[noteRef.current]
+            }
+        })
     }
+
 
     async function fetchNotes() : Promise<Note[]>{
         const response = await fetch(`https://tayjournal-api.herokuapp.com/notes/${cookies.user}`,
@@ -65,7 +75,7 @@ export const NotesProvider = ({children}: ProviderProps) => {
     },[cookies.user]
     )
 
-    return <NotesContext.Provider value={{notesData, setNotesData, noteRef, handleClick}}>{children}
+    return <NotesContext.Provider value={{notesData, setNotesData, currentNote, setCurrentNote, noteRef, handleClick}}>{children}
         </NotesContext.Provider>
 };
 

@@ -8,8 +8,9 @@ export default function Sidebar(): React.JSX.Element{
 
 
     if(!notesData.Notes.length){
-        return <li> + Create a New Note</li>
+        return <li> Loading....</li>
     }
+    
 
     const liList = notesData.Notes.map((note, index) =>{
         return <li value={index} onClick={(event)=>{handleClick(event.currentTarget.value)}} key={index}>{note.title}</li>
