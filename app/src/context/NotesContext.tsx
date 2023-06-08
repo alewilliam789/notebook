@@ -8,17 +8,15 @@ export interface Note  {
     userName: string;
 }
 
-type NotesData = {
-    Notes : Note[];
-}
 
 interface NotesContextProps {
-    notesData : NotesData;
+    notesData : Note[];
     currentNote : Note;
-    noteRef : MutableRefObject<number | null>;
-    handleClick : (noteRef : number) => void;
-    setNotesData: (notesData : NotesData ) => void;
-    setCurrentNote : (note : Note) => void;
+    noteRef : MutableRefObject<number>;
+    isEditing : boolean;
+    setIsEditing : React.Dispatch<React.SetStateAction<boolean>>;
+    setNotesData: React.Dispatch<React.SetStateAction<Note[]>>;
+    setCurrentNote : React.Dispatch<React.SetStateAction<Note>>;
 
 }
 
@@ -28,30 +26,19 @@ type ProviderProps = {
     children : ReactNode
 }
 
+
 export const NotesProvider = ({children}: ProviderProps) => {
-    const [notesData, setNotesData] = useState<NotesData>({
-        Notes: []
-    });
+    const [notesData, setNotesData] = useState<Note[]>([]);
+
+    const [isEditing, setIsEditing] = useState(false);
 
     const noteRef = useRef<number>(0)
 
     const [cookies] = useCookies(['user']);
 
-    const [currentNote, setCurrentNote] =  useState<Note>(notesData.Notes[noteRef.current]);
+    const [currentNote, setCurrentNote] =  useState<Note>(notesData[noteRef.current]);
 
     
-
-
-    function handleClick(noteIndex: number){
-        noteRef.current = noteIndex
-        setCurrentNote((prevNote) => {
-            return {
-                ...prevNote,
-                ...notesData.Notes[noteRef.current]
-            }
-        })
-    }
-
 
     async function fetchNotes() : Promise<Note[]>{
         const response = await fetch(`https://tayjournal-api.herokuapp.com/notes/${cookies.user}`,
@@ -66,16 +53,13 @@ export const NotesProvider = ({children}: ProviderProps) => {
     useEffect(() => {
         if(cookies.user){
             fetchNotes().then((data)=>{
-                setNotesData({
-                    ...notesData,
-                    Notes : data
-                })
-            })   
+                setNotesData([...data])
+            })
         }
     },[cookies.user]
     )
 
-    return <NotesContext.Provider value={{notesData, setNotesData, currentNote, setCurrentNote, noteRef, handleClick}}>{children}
+    return <NotesContext.Provider value={{notesData, setNotesData, currentNote, setCurrentNote, isEditing, setIsEditing, noteRef}}>{children}
         </NotesContext.Provider>
 };
 

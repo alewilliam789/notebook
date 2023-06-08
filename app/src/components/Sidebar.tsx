@@ -3,16 +3,27 @@ import {useNotesContext } from "../context/NotesContext"
 
 export default function Sidebar(): React.JSX.Element{
 
-    const {notesData, handleClick} = useNotesContext();
+    const {notesData, noteRef, setCurrentNote} = useNotesContext();
+
+    function handleClick(noteIndex: number){
+        noteRef.current = noteIndex
+        setCurrentNote((prevNote) => {
+            return {
+                ...prevNote,
+                ...notesData[noteRef.current]
+            }
+        })
+    }
 
 
 
-    if(!notesData.Notes.length){
+
+    if(!notesData.length){
         return <li> Loading....</li>
     }
     
 
-    const liList = notesData.Notes.map((note, index) =>{
+    const liList = notesData.map((note, index) =>{
         return <li value={index} onClick={(event)=>{handleClick(event.currentTarget.value)}} key={index}>{note.title}</li>
     
     })
