@@ -2,7 +2,7 @@ import { ReactNode, createContext, useContext, useState, useEffect, useRef, Muta
 import { useCookies } from "react-cookie";
 
 export interface Note  {
-    id? : string;
+    _id : string;
     title: string;
     body: string;
     userName: string;
