@@ -1,14 +1,13 @@
-import { set, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useNotesContext } from "../context/NotesContext";
 import { useState } from "react";
-import { useCookies} from "react-cookie";
 
 
 
 export default function NoteForm(){
 
 
-    const {currentNote, setCurrentNote, isEditing, setIsEditing, isAddingNote, setIsAddingNote, setNotesData} = useNotesContext()
+    const {currentNote, setCurrentNote, setNotesData, isForm, setIsForm, user} = useNotesContext()
 
 
     const {register, handleSubmit, formState: {errors}} = useForm(
@@ -19,7 +18,6 @@ export default function NoteForm(){
     );
 
     const [errorMessage, setErrorMessage] = useState({currentError : ""})
-    const [cookies, setCookie] = useCookies(['user']);
 
     interface FormData{
         title : string;
@@ -59,7 +57,7 @@ export default function NoteForm(){
         {
             method: "POST",
             headers: {'Content-Type':'application/json'},
-            body: JSON.stringify({...data,...cookies}),
+            body: JSON.stringify({...data,userName : user}),
         }
         )
 
@@ -84,40 +82,44 @@ export default function NoteForm(){
 
     async function onSubmit(data: FormData ){
 
-        if(isEditing){
+        if(isForm.add){
             addNote(data)
         }
-        else if(isAddingNote){
-            addNote(data)
+        else {
+            editNote(data)
         }
 
-    //    if(!errorMessage.currentError){
+       if(!errorMessage.currentError){
 
-    //         setCurrentNote((prevNote)=>{
-    //             return {
-    //                 ...prevNote,
-    //                 ...data
-    //             }
-    //         });
+            setCurrentNote((prevNote)=>{
+                return {
+                    ...prevNote,
+                    ...data
+                }
+            });
 
-    //         setNotesData((prevNotesData)=>{
-    //             const newNotesData = prevNotesData.map((note, index) => {
-    //                 if(index == noteRef.current){
-    //                     return {...currentNote, ...data}
-    //                 }
-    //                 else{
-    //                     return note
-    //                 }
-    //             }
-    //             )
+            setNotesData((prevNotesData)=>{
+                const newNotesData = prevNotesData.map((note) => {
+                    if(note._id == currentNote._id){
+                        return {...currentNote, ...data}
+                    }
+                    else{
+                        return note
+                    }
+                }
+                )
 
-    //             return newNotesData
-    //             })
+                return newNotesData
+                })
 
-    //         setIsEditing((prevState)=>{
-    //             return !prevState
-    //         })
-    //     }
+            setIsForm((prevState)=>{
+                return {
+                    ...prevState,
+                    add : false,
+                    edit : false
+                }
+            })
+        }
 
     }
 
@@ -126,7 +128,7 @@ export default function NoteForm(){
         <div className="w-96  mx-auto mt-20 border border-gray-800">
         <form id="user" className="p-6 grid gap-5" onSubmit={handleSubmit(onSubmit)}>
                 <div className="flex flex-col gap-10">
-                <button type="button" className="self-end font-bold" onClick={()=>{setIsEditing((prevState)=>{return !prevState})}}>X</button>
+                <button type="button" className="self-end font-bold" onClick={()=>{setIsForm((prevState)=>{return {...prevState, add: false, edit : false}})}}>X</button>
                     <label className="mb-10 text-center text-2xl"> Edit Note</label>
                 </div>
                 <input className="border-2 border-gray-300 focus:outline-none" placeholder="Title" {...register("title", {required: "This field is required", minLength :{value: 4, message: "This title is too short"}})}/>

@@ -1,13 +1,12 @@
 import Note from "./Note";
 import { useNotesContext } from "../context/NotesContext";
-import { useEffect, useRef, useState } from "react";
+import { useEffect} from "react";
 import NoteForm from "./NoteForm";
-import { useCookies } from "react-cookie";
 
 
 export default function Notepad(){
 
-   const {currentNote, setCurrentNote, isEditing, setIsEditing, isAddingNote, setIsAddingNote} = useNotesContext();
+   const {currentNote, setCurrentNote, isForm, setIsForm} = useNotesContext();
    
 
   useEffect(()=>{
@@ -26,15 +25,34 @@ export default function Notepad(){
   },[currentNote.title])
 
 
-  if(isEditing || isAddingNote) {
+  const changeForm = (formOperation : string) =>{
+    if(formOperation == "add")
+      setIsForm((prevState)=>{
+        return {
+          ...prevState,
+          add: true
+        }
+      })
+    else {
+      setIsForm((prevState)=>{
+        return {
+          ...prevState,
+          edit: true
+        }
+      })
+    }
+  };
+
+
+  if(isForm.add || isForm.edit) {
     return (
       <div>
         <NoteForm />
       </div>
     )
   }
-  const addButton = <button onClick={()=>{setIsAddingNote((prevstate)=>{return !prevstate})}}>Add Note</button>;
-  const editButton = <button onClick={()=>{setIsEditing((prevstate)=>{return !prevstate})}}>Edit</button> 
+  const addButton = <button onClick={()=>{changeForm("add")}}>Add Note</button>;
+  const editButton = <button onClick={()=>{changeForm("edit")}}>Edit</button> 
    
 
   return (

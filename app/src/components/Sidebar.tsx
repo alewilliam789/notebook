@@ -1,21 +1,13 @@
 import {useNotesContext } from "../context/NotesContext"
-import { useCookies } from "react-cookie";
 
 
 export default function Sidebar(): React.JSX.Element{
 
     const {notesData, setCurrentNote} = useNotesContext();
 
-    const [cookies, setCookies] = useCookies(['noteIndex']);
 
     function handleClick(noteIndex: number){
-        setCookies(
-            'noteIndex',
-            noteIndex,
-            {
-                path: '/'
-            }
-        )
+        
         setCurrentNote((prevNote) => {
             return {
                 ...prevNote,

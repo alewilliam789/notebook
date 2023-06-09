@@ -15,12 +15,16 @@ interface NotesContextProps {
     currentNote : Note;
     setCurrentNote : React.Dispatch<React.SetStateAction<Note>>;
 
-    isEditing : boolean;
-    setIsEditing : React.Dispatch<React.SetStateAction<boolean>>;
+    isForm: FormBooleans;
+    setIsForm: React.Dispatch<React.SetStateAction<FormBooleans>>
 
-    isAddingNote : boolean;
-    setIsAddingNote : React.Dispatch<React.SetStateAction<boolean>>;
+    user: string;
 
+}
+
+interface FormBooleans {
+    edit : boolean,
+    add : boolean
 }
 
 export const NotesContext = createContext<NotesContextProps | null>(null);
@@ -34,9 +38,7 @@ export const NotesProvider = ({children}: ProviderProps) => {
 
     const [notesData, setNotesData] = useState<Note[]>(JSON.parse(localStorage.getItem('notes')||'[]'));
 
-    const [isEditing, setIsEditing] = useState(false);
-
-    const [isAddingNote, setIsAddingNote] = useState(false);
+    const [isForm, setIsForm] = useState<FormBooleans>({"edit" :false, "add": false});
 
     const [user] = useState(localStorage.getItem('user')?.replace(/["]+/g,"") || "");
     
@@ -66,7 +68,7 @@ export const NotesProvider = ({children}: ProviderProps) => {
         console.log(notesData)
     },[notesData.length])
 
-    return <NotesContext.Provider value={{notesData, setNotesData, currentNote, setCurrentNote, isEditing, setIsEditing, isAddingNote, setIsAddingNote}}>{children}
+    return <NotesContext.Provider value={{notesData, setNotesData, currentNote, setCurrentNote,isForm, setIsForm, user}}>{children}
         </NotesContext.Provider>
 };
 
