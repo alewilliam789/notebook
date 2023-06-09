@@ -1,36 +1,52 @@
 import Note from "./Note";
 import { useNotesContext } from "../context/NotesContext";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import NoteForm from "./NoteForm";
 import { useCookies } from "react-cookie";
 
 
 export default function Notepad(){
 
-   const {currentNote, isEditing, setIsEditing} = useNotesContext();
+   const {currentNote, setCurrentNote, isEditing, setIsEditing, isAddingNote, setIsAddingNote} = useNotesContext();
+   
 
-const [addNote, setAddNote] = useState(false);
-const [cookies, setCookies] = useCookies(['currentNote'])
+  useEffect(()=>{
+    if(currentNote.title != ""){
+      localStorage.setItem('note',JSON.stringify(currentNote))
+    }
+    const lastNote = JSON.parse(localStorage.getItem('note') || "");
+    setCurrentNote((prevState)=>{
+      return{
+        ...prevState,
+        ...lastNote
+      }
+    })
+
+    
+  },[currentNote.title])
 
 
-const renderNote = useRef(currentNote)
-
-
-
-if(isEditing) {
-  return (
-    <div>
-      <NoteForm />
-    </div>
-  )
-}
+  if(isEditing || isAddingNote) {
+    return (
+      <div>
+        <NoteForm />
+      </div>
+    )
+  }
+  const addButton = <button onClick={()=>{setIsAddingNote((prevstate)=>{return !prevstate})}}>Add Note</button>;
+  const editButton = <button onClick={()=>{setIsEditing((prevstate)=>{return !prevstate})}}>Edit</button> 
+   
 
   return (
       <div className="flex gap-96">
         <div>
-          <Note {...currentNote} />
+          <Note />
         </div>
-          <button onClick={()=>{setIsEditing((prevstate)=>{return !prevstate})}}>Edit</button>
+        <div className="flex gap-6">
+          {addButton}
+          {editButton}
+        </div>
+
       </div>
   )
 }

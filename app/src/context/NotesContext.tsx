@@ -1,22 +1,25 @@
-import { ReactNode, createContext, useContext, useState, useEffect, useRef, MutableRefObject} from "react";
-import { useCookies } from "react-cookie";
+import { ReactNode, createContext, useContext, useState, useEffect} from "react";
 
 export interface Note  {
-    _id : string;
+    _id? : string;
     title: string;
     body: string;
-    userName: string;
+    userName?: string;
 }
 
 
 interface NotesContextProps {
     notesData : Note[];
+    setNotesData: React.Dispatch<React.SetStateAction<Note[]>>;
+
     currentNote : Note;
-    noteRef : MutableRefObject<number>;
+    setCurrentNote : React.Dispatch<React.SetStateAction<Note>>;
+
     isEditing : boolean;
     setIsEditing : React.Dispatch<React.SetStateAction<boolean>>;
-    setNotesData: React.Dispatch<React.SetStateAction<Note[]>>;
-    setCurrentNote : React.Dispatch<React.SetStateAction<Note>>;
+
+    isAddingNote : boolean;
+    setIsAddingNote : React.Dispatch<React.SetStateAction<boolean>>;
 
 }
 
@@ -28,38 +31,42 @@ type ProviderProps = {
 
 
 export const NotesProvider = ({children}: ProviderProps) => {
-    const [notesData, setNotesData] = useState<Note[]>([]);
+
+    const [notesData, setNotesData] = useState<Note[]>(JSON.parse(localStorage.getItem('notes')||'[]'));
 
     const [isEditing, setIsEditing] = useState(false);
 
-    const noteRef = useRef<number>(0)
+    const [isAddingNote, setIsAddingNote] = useState(false);
 
-    const [cookies] = useCookies(['user']);
-
-    const [currentNote, setCurrentNote] =  useState<Note>(notesData[noteRef.current]);
-
+    const [user] = useState(localStorage.getItem('user')?.replace(/["]+/g,"") || "");
     
 
-    async function fetchNotes() : Promise<Note[]>{
-        const response = await fetch(`https://tayjournal-api.herokuapp.com/notes/${cookies.user}`,
-        {
-            method: "GET"
-        }
-        )
+    const [currentNote, setCurrentNote] =  useState<Note>({title: "", body:""});
+    
 
-        return response.json() as Promise<Note[]>;
-    }
+    function fetchNotes() : void {
+        if(user){
+            fetch(`https://tayjournal-api.herokuapp.com/notes/${user}`,
+            {
+                method: "GET"
+            }
+            ).then((response)=>{
+                return response.json();
+            }).then((data : Note[])=>{
+                setNotesData([...data])
+            }).catch((error : ErrorConstructor)=>{
+                throw new Error (`${error} occured on the GET request`)
+            })
+            }
+        }
 
     useEffect(() => {
-        if(cookies.user){
-            fetchNotes().then((data)=>{
-                setNotesData([...data])
-            })
-        }
-    },[cookies.user]
-    )
+        fetchNotes()
+        localStorage.setItem('notes',JSON.stringify(notesData))
+        console.log(notesData)
+    },[notesData.length])
 
-    return <NotesContext.Provider value={{notesData, setNotesData, currentNote, setCurrentNote, isEditing, setIsEditing, noteRef}}>{children}
+    return <NotesContext.Provider value={{notesData, setNotesData, currentNote, setCurrentNote, isEditing, setIsEditing, isAddingNote, setIsAddingNote}}>{children}
         </NotesContext.Provider>
 };
 

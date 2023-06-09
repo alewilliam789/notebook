@@ -1,14 +1,12 @@
 import { useState } from "react";
 import {useForm} from "react-hook-form";
 import { Link, useNavigate} from "react-router-dom";
-import {useCookies} from "react-cookie";
 
 
 export default function Login(){
 
     const navigate = useNavigate();
 
-    const [cookies, setCookie] = useCookies(['user']);
 
     const [userVerification, setUserVerification] = useState({
         isCorrectPassword: true,
@@ -64,13 +62,7 @@ export default function Login(){
                 })
             }
             else{
-                setCookie(
-                    "user",
-                    data.userName,
-                    {
-                        path: '/',
-                    }
-                )
+               localStorage.setItem('user', JSON.stringify(data.userName))
                 navigate("/notebook")
             }
         }

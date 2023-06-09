@@ -1,22 +1,18 @@
+import { useNotesContext } from "../context/NotesContext"
 
 
-interface NoteProps {
-    id?: string,
-    title: string,
-    body: string,
-    userName: string
-}
 
 
-export default function Note(props: NoteProps) {
+export default function Note() {
 
+const {currentNote} = useNotesContext()
 return(
     <>
     <div>
-        {props.title}
+        {currentNote.title}
     </div>
     <div>
-        {props.body}
+        {currentNote.body}
     </div>
     </>
 )
