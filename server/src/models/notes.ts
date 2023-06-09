@@ -3,7 +3,7 @@ import { ObjectId} from "mongodb";
 
 
 
-export default class Notes {
+export default class Note {
     
     constructor(
         public title: string,

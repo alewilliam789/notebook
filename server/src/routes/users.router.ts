@@ -16,7 +16,7 @@ usersRouter.use(express.json());
 // POST
 
 // Add new user
-usersRouter.post('', async (req: Request, res: Response ) => {
+usersRouter.post('/register', async (req: Request, res: Response ) => {
 
     try {
         const newUser = req.body as User;
@@ -36,7 +36,6 @@ usersRouter.post('', async (req: Request, res: Response ) => {
         }
     }
     catch(error) {
-        console.error(error);
         res.status(400).send(error.message);
     }
 } )
@@ -82,7 +81,6 @@ usersRouter.put("/:username", async(req: Request, res: Response) => {
 
     }
     catch(error) {
-        console.error(error.message);
         res.status(400).send(error.message);
     }
 })
@@ -106,7 +104,6 @@ usersRouter.delete("/:username", async(req: Request, res: Response) => {
         }
     }
     catch(error){
-        console.error(error.message);
         res.status(400).send(error.message);
     }
 })

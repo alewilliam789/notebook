@@ -2,7 +2,7 @@
 import express, {Request, Response} from 'express';
 import {ObjectId} from 'mongodb';
 import {collections} from '../services/database.service.js';
-import Notes from "../models/notes.js";
+import Note from "../models/notes.js";
 
 
 
@@ -21,7 +21,7 @@ notesRouter.get('/:username', async (req: Request, res: Response)=>{
 
     try{
         const query = { userName: username};
-        const notes = (await collections.notes.find<{}>(query).toArray()) as Notes[];
+        const notes = (await collections.notes.find<{}>(query).toArray()) as Note[];
 
         res.status(200).send(notes)
     }
@@ -38,7 +38,7 @@ notesRouter.get('/note/:noteid', async (req: Request, res: Response)=>{
 
     try{
         const query = { _id : new ObjectId(noteId)};
-        const note = (await collections.notes.findOne<Notes>(query)) as Notes;
+        const note = (await collections.notes.findOne<Note>(query)) as Note;
 
         if(note){
             res.status(200).send(note)
@@ -55,16 +55,15 @@ notesRouter.post('', async (req: Request, res: Response ) => {
 
 
     try {
-        const newNote = req.body as Notes;
+        const newNote = req.body as Note;
        
         const result = await collections.notes.insertOne(newNote);
         result
-            ? res.status(201).send(`Successfully created a new note with id ${result.insertedId}.`)
+            ? res.status(201).send(newNote)
             : res.status(500).send('Failed to create new note.')
             
     }
     catch(error) {
-        console.error(error);
         res.status(400).send(error.message);
     }
 } )
@@ -74,7 +73,7 @@ notesRouter.put("/:noteid", async(req: Request, res: Response) => {
     const noteId = req?.params?.noteid;
 
     try{
-        const updatedNote: Notes = req.body as Notes;
+        const updatedNote: Note = req.body as Note;
         const query = { _id: new ObjectId(noteId) };
 
 
@@ -86,7 +85,6 @@ notesRouter.put("/:noteid", async(req: Request, res: Response) => {
 
     }
     catch(error) {
-        console.error(error.message);
         res.status(400).send(error.message);
     }
 })
@@ -110,7 +108,6 @@ notesRouter.delete("/:noteid", async(req: Request, res: Response) => {
         }
     }
     catch(error){
-        console.error(error.message);
         res.status(400).send(error.message);
     }
 })
