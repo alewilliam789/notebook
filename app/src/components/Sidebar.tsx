@@ -18,10 +18,6 @@ export default function Sidebar(): React.JSX.Element{
 
 
 
-
-    if(!notesData.length){
-        return <li> Loading....</li>
-    }
     
 
     const liList = notesData.map((note, index) =>{

@@ -26,14 +26,22 @@ export default function Notepad(){
 
 
   const changeForm = (formOperation : string) =>{
-    if(formOperation == "add")
+    if(formOperation == "add"){
       setIsForm((prevState)=>{
         return {
           ...prevState,
           add: true
         }
-      })
-    else {
+      });
+      setCurrentNote((prevNote)=>{
+        return {
+          ...prevNote,
+          title: "",
+          body: "",
+        }
+      });
+      }
+    else if(formOperation == "edit"){
       setIsForm((prevState)=>{
         return {
           ...prevState,
@@ -41,18 +49,27 @@ export default function Notepad(){
         }
       })
     }
+    else{
+      setIsForm((prevState)=>{
+        return {
+          ...prevState,
+          delete: true
+        }
+      })
+    }
   };
 
 
-  if(isForm.add || isForm.edit) {
+  if(isForm.add || isForm.edit || isForm.delete) {
     return (
       <div>
         <NoteForm />
       </div>
     )
   }
-  const addButton = <button onClick={()=>{changeForm("add")}}>Add Note</button>;
+  const addButton = <button onClick={()=>{changeForm("add")}}>+</button>;
   const editButton = <button onClick={()=>{changeForm("edit")}}>Edit</button> 
+  const deleteButton = <button onClick={()=>{changeForm("delete")}}>Delete</button>
    
 
   return (
@@ -63,6 +80,7 @@ export default function Notepad(){
         <div className="flex gap-6">
           {addButton}
           {editButton}
+          {deleteButton}
         </div>
 
       </div>

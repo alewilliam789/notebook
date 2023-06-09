@@ -24,7 +24,8 @@ interface NotesContextProps {
 
 interface FormBooleans {
     edit : boolean,
-    add : boolean
+    add : boolean,
+    delete: boolean
 }
 
 export const NotesContext = createContext<NotesContextProps | null>(null);
@@ -38,7 +39,9 @@ export const NotesProvider = ({children}: ProviderProps) => {
 
     const [notesData, setNotesData] = useState<Note[]>(JSON.parse(localStorage.getItem('notes')||'[]'));
 
-    const [isForm, setIsForm] = useState<FormBooleans>({"edit" :false, "add": false});
+
+    const [isForm, setIsForm] = useState<FormBooleans>({"edit" :false, "add": false, "delete": false});
+
 
     const [user] = useState(localStorage.getItem('user')?.replace(/["]+/g,"") || "");
     
@@ -65,7 +68,6 @@ export const NotesProvider = ({children}: ProviderProps) => {
     useEffect(() => {
         fetchNotes()
         localStorage.setItem('notes',JSON.stringify(notesData))
-        console.log(notesData)
     },[notesData.length])
 
     return <NotesContext.Provider value={{notesData, setNotesData, currentNote, setCurrentNote,isForm, setIsForm, user}}>{children}

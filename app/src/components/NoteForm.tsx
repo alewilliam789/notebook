@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
-import { useNotesContext } from "../context/NotesContext";
-import { useState } from "react";
+import { Note, useNotesContext } from "../context/NotesContext";
+import { useState, useRef} from "react";
 
 
 
@@ -11,13 +11,16 @@ export default function NoteForm(){
 
 
     const {register, handleSubmit, formState: {errors}} = useForm(
-        {defaultValues: {
-            title : `${currentNote.title}`,
-            body : `${currentNote.body}`
-        }}
+        {
+            defaultValues: {
+                title : `${currentNote.title}`,
+                body : `${currentNote.body}`
+            }
+        }
     );
 
-    const [errorMessage, setErrorMessage] = useState({currentError : ""})
+    const [errorMessage, setErrorMessage] = useState("");
+    const newNote = useRef<Note>({title: "", body:""})
 
     interface FormData{
         title : string;
@@ -34,20 +37,33 @@ export default function NoteForm(){
         )
 
         if(response.status == 304){
-            setErrorMessage((prevMessage)=> {
-                return {
-                    ...prevMessage,
-                    currentError : "Note was not updated"
-                }
-            })
+            setErrorMessage("Note was not updated");
         }
         else if(response.status == 400){
-            setErrorMessage((prevMessage)=> {
+            setErrorMessage("Your note was not found or we had trouble updating it. Try again later.");
+        }
+        else {
+            setCurrentNote((prevNote)=>{
                 return {
-                    ...prevMessage,
-                    currentError : "Your note was not found or we had trouble updating it. Try again later."
+                    ...prevNote,
+                    ...data
                 }
             })
+
+            setNotesData((prevNotesData)=>{
+                const newNotesData = prevNotesData.map((note)=>{
+                    if(note._id == currentNote._id){
+                        return {
+                            ...currentNote,
+                            ...data
+                        }
+                    }
+                    else{
+                        return note
+                    }
+                    })
+                    return newNotesData
+                })
         }
     }
 
@@ -62,63 +78,116 @@ export default function NoteForm(){
         )
 
         if(response.status == 500){
-            setErrorMessage((prevMessage)=> {
-                return {
-                    ...prevMessage,
-                    currentError : "Note was not created."
-                }
-            })
+            setErrorMessage("Note was not created.");
         }
         else if(response.status == 400){
-            setErrorMessage((prevMessage)=> {
+            setErrorMessage("Your note was not found or we had trouble updating it. Try again later.");
+        }
+        else{
+            response.json().then((data)=>{
+                newNote.current = data
+                setCurrentNote((prevNote)=>{
+                    return {
+                        ...prevNote,
+                        ...data
+                    }
+                })
+            })
+
+            
+            setNotesData((prevNotesData)=>{
+                    return [...prevNotesData, newNote.current]
+                })
+        }
+
+
+    }
+
+    async function deleteNote(){
+        const response = await fetch(`https://tayjournal-api.herokuapp.com/notes/${currentNote["_id"]}`,
+        {
+            method: "DELETE",
+        }
+        )
+
+        if(response.status == 404){
+            setErrorMessage(`Could not find note this note`);
+        }
+        else if(response.status == 400){
+            setErrorMessage("Your note was not found or we had trouble deleting it. Try again later.");
+        }
+        else {
+            setCurrentNote((prevNote)=>{
                 return {
-                    ...prevMessage,
-                    currentError : "Your note was not found or we had trouble updating it. Try again later."
+                    ...prevNote,
+                    title: "",
+                    body: ""
                 }
             })
+
+            setNotesData((prevNotesData)=>{
+                    const newNotesData = prevNotesData.filter(note=>{
+                        note._id !== currentNote._id
+                    })
+                    return newNotesData
+                })
+                localStorage.setItem('note',JSON.stringify({title: "", body: ""}))
         }
     }
 
 
     async function onSubmit(data: FormData ){
-
         if(isForm.add){
             addNote(data)
         }
-        else {
+        else if(isForm.edit){
             editNote(data)
         }
+        else if(isForm.delete){
+            deleteNote()
+        }
 
-       if(!errorMessage.currentError){
-
-            setCurrentNote((prevNote)=>{
-                return {
-                    ...prevNote,
-                    ...data
-                }
-            });
-
-            setNotesData((prevNotesData)=>{
-                const newNotesData = prevNotesData.map((note) => {
-                    if(note._id == currentNote._id){
-                        return {...currentNote, ...data}
-                    }
-                    else{
-                        return note
-                    }
-                }
-                )
-
-                return newNotesData
-                })
-
-            setIsForm((prevState)=>{
-                return {
-                    ...prevState,
-                    add : false,
-                    edit : false
-                }
+        setIsForm((prevState)=>{
+            return {
+                ...prevState,
+                add : false,
+                edit : false,
+                delete : false
+            }
             })
+    }
+
+    function formHeader(){
+
+        if(isForm.add){
+            return "Add Note"
+        }
+        else if(isForm.edit){
+            return "Edit Note"
+        }
+        return "Are you sure you want to delete this note?"
+    }
+
+    function formText(){
+        if(isForm.delete){
+            return (
+             <>
+                <input className="mb-2 p-2 border rounded-xl text-white bg-gradient-to-r from-sky-500 to-indigo-500" type="submit"/>
+             </>
+            )
+        }
+        else {
+            return (
+                <>
+                    <input className="border-2 border-gray-300 focus:outline-none" placeholder="Title" {...register("title", {required: "This field is required", minLength :{value: 4, message: "This title is too short"}})}/>
+                    <p className="text-red-600 italic font-thin text-sm">{errors.title?.message?.toString()}</p>
+                    
+                    <textarea className="h-36 border-2 border-gray-300 focus:outline-none" placeholder="Body" {...register("body", {required: "This field is required", minLength :{value: 4, message: "This title is too short"}})} />
+                    <p className="text-red-600 italic font-thin text-sm">{errors.body?.message?.toString()}</p>
+                    <p className="text-red-600 italic font-thin text-sm">{errorMessage}</p>
+                    <input className="mb-2 p-2 border rounded-xl text-white bg-gradient-to-r from-sky-500 to-indigo-500" type="submit"/>
+                </>
+            )
         }
 
     }
@@ -128,16 +197,10 @@ export default function NoteForm(){
         <div className="w-96  mx-auto mt-20 border border-gray-800">
         <form id="user" className="p-6 grid gap-5" onSubmit={handleSubmit(onSubmit)}>
                 <div className="flex flex-col gap-10">
-                <button type="button" className="self-end font-bold" onClick={()=>{setIsForm((prevState)=>{return {...prevState, add: false, edit : false}})}}>X</button>
-                    <label className="mb-10 text-center text-2xl"> Edit Note</label>
+                    <button type="button" className="self-end font-bold" onClick={()=>{setIsForm((prevState)=>{return {...prevState, add: false, edit : false, delete: false}})}}>X</button>
+                    <label className="mb-10 text-center text-2xl"> {formHeader()}</label>
                 </div>
-                <input className="border-2 border-gray-300 focus:outline-none" placeholder="Title" {...register("title", {required: "This field is required", minLength :{value: 4, message: "This title is too short"}})}/>
-                <p className="text-red-600 italic font-thin text-sm">{errors.title?.message?.toString()}</p>
-                
-                <textarea className="h-36 border-2 border-gray-300 focus:outline-none" placeholder="Body" {...register("body", {required: "This field is required", minLength :{value: 4, message: "This title is too short"}})} />
-                {/* <p className="text-red-600 italic font-thin text-sm">{handleUserVerification()}</p> */}
-                <p className="text-red-600 italic font-thin text-sm">{errorMessage.currentError}</p>
-                <input className="mb-2 p-2 border rounded-xl text-white bg-gradient-to-r from-sky-500 to-indigo-500" type="submit"/>
+                {formText()}
         </form>
         </div>
     )

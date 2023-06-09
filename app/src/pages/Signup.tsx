@@ -26,21 +26,18 @@ export default function Signup(){
     }
 
 
-
-
-    type FormValues = {
-        userName : string;
-        password : string;
-        confirmPassword : string;
-    }
-
-
     async function validatePassword(value : string){
         const password = getValues("password");
 
         if(!(value == password)){
             return 'Passwords need to match'
         }
+    }
+
+    type FormValues = {
+        userName : string;
+        password : string;
+        confirmPassword : string;
     }
 
 
