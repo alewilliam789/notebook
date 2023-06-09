@@ -31,7 +31,6 @@ usersRouter.post('/register', async (req, res) => {
 });
 // Verify current user
 usersRouter.post('/login', async (req, res) => {
-    console.log(req.body);
     const userLogin = req.body;
     try {
         const query = { userName: userLogin.userName };
@@ -60,7 +59,6 @@ usersRouter.put("/:username", async (req, res) => {
             : res.status(304).send(`User with id: ${userName} not updated`);
     }
     catch (error) {
-        console.error(error.message);
         res.status(400).send(error.message);
     }
 });
@@ -81,7 +79,6 @@ usersRouter.delete("/:username", async (req, res) => {
         }
     }
     catch (error) {
-        console.error(error.message);
         res.status(400).send(error.message);
     }
 });

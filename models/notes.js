@@ -1,4 +1,4 @@
-export default class Notes {
+export default class Note {
     title;
     body;
     userName;

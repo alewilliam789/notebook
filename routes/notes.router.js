@@ -38,11 +38,10 @@ notesRouter.post('', async (req, res) => {
         const newNote = req.body;
         const result = await collections.notes.insertOne(newNote);
         result
-            ? res.status(201).send(`Successfully created a new note with id ${result.insertedId}.`)
+            ? res.status(201).send(newNote)
             : res.status(500).send('Failed to create new note.');
     }
     catch (error) {
-        console.error(error);
         res.status(400).send(error.message);
     }
 });
@@ -58,7 +57,6 @@ notesRouter.put("/:noteid", async (req, res) => {
             : res.status(304).send(`Note with id: ${noteId} not updated`);
     }
     catch (error) {
-        console.error(error.message);
         res.status(400).send(error.message);
     }
 });
@@ -79,7 +77,6 @@ notesRouter.delete("/:noteid", async (req, res) => {
         }
     }
     catch (error) {
-        console.error(error.message);
         res.status(400).send(error.message);
     }
 });
