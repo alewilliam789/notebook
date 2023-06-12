@@ -6,12 +6,12 @@ import './index.css';
 import Login from './pages/Login.tsx';
 import Signup from './pages/Signup.tsx';
 import { NotesProvider } from './context/NotesContext.tsx';
-import Notepad from './components/Notepad.tsx';
 import { CookiesProvider } from 'react-cookie';
+import ProtectedRoute from './routes/ProtectedRoute.tsx'
 
 const router = createBrowserRouter([
   {
-    path:"/",
+    path:"/login",
     element: <Login />,
   },
   {
@@ -20,13 +20,10 @@ const router = createBrowserRouter([
   },
   {
     path:"/notebook",
-    element: <App />,
-    children: [
-      {
-        path: "notes",
-        element: <Notepad />,
-      } 
-    ],
+    element:
+     <ProtectedRoute>
+        <App />
+     </ProtectedRoute>
   }
 ]);
 

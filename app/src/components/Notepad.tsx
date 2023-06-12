@@ -13,16 +13,16 @@ export default function Notepad(){
     if(currentNote.title != ""){
       localStorage.setItem('note',JSON.stringify(currentNote))
     }
-    const lastNote = JSON.parse(localStorage.getItem('note') || "");
-    setCurrentNote((prevState)=>{
-      return{
-        ...prevState,
-        ...lastNote
-      }
-    })
-
-    
-  },[currentNote.title])
+    else if(localStorage.getItem('note')){
+      const lastNote = JSON.parse(localStorage.getItem('note') || "");
+      setCurrentNote((prevState)=>{
+        return{
+          ...prevState,
+          ...lastNote
+        }
+      })
+    }
+  },[currentNote.body])
 
 
   const changeForm = (formOperation : string) =>{

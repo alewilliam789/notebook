@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { Note, useNotesContext } from "../context/NotesContext";
-import { useState, useRef} from "react";
+import { useRef} from "react";
 
 
 
@@ -19,7 +19,7 @@ export default function NoteForm(){
         }
     );
 
-    const [errorMessage, setErrorMessage] = useState("");
+    const errorMessage = useRef<string> ("");
     const newNote = useRef<Note>({title: "", body:""})
 
     interface FormData{
@@ -28,6 +28,29 @@ export default function NoteForm(){
     }
 
     async function editNote(data : FormData){
+
+        setCurrentNote((prevNote)=>{
+            return {
+                ...prevNote,
+                ...data
+            }
+        })
+
+        setNotesData((prevNotesData)=>{
+            const newNotesData = prevNotesData.map((note)=>{
+                if(note._id == currentNote._id){
+                    return {
+                        ...currentNote,
+                        ...data
+                    }
+                }
+                else{
+                    return note
+                }
+                })
+                return newNotesData
+            })
+
         const response = await fetch(`https://tayjournal-api.herokuapp.com/notes/${currentNote["_id"]}`,
         {
             method: "PUT",
@@ -37,37 +60,15 @@ export default function NoteForm(){
         )
 
         if(response.status == 304){
-            setErrorMessage("Note was not updated");
+            throw new Error("Note was not updated")
         }
         else if(response.status == 400){
-            setErrorMessage("Your note was not found or we had trouble updating it. Try again later.");
-        }
-        else {
-            setCurrentNote((prevNote)=>{
-                return {
-                    ...prevNote,
-                    ...data
-                }
-            })
-
-            setNotesData((prevNotesData)=>{
-                const newNotesData = prevNotesData.map((note)=>{
-                    if(note._id == currentNote._id){
-                        return {
-                            ...currentNote,
-                            ...data
-                        }
-                    }
-                    else{
-                        return note
-                    }
-                    })
-                    return newNotesData
-                })
+            throw new Error("Your note was not found or we had trouble updating it. Try again later.");
         }
     }
 
     async function addNote(data: FormData){
+
 
         const response = await fetch(`https://tayjournal-api.herokuapp.com/notes`,
         {
@@ -77,13 +78,7 @@ export default function NoteForm(){
         }
         )
 
-        if(response.status == 500){
-            setErrorMessage("Note was not created.");
-        }
-        else if(response.status == 400){
-            setErrorMessage("Your note was not found or we had trouble updating it. Try again later.");
-        }
-        else{
+        if(response.status == 201){
             response.json().then((data)=>{
                 newNote.current = data
                 setCurrentNote((prevNote)=>{
@@ -93,17 +88,39 @@ export default function NoteForm(){
                     }
                 })
             })
-
-            
             setNotesData((prevNotesData)=>{
-                    return [...prevNotesData, newNote.current]
-                })
-        }
+                return [...prevNotesData, newNote.current]
+            })
+            localStorage.setItem('notes',JSON.stringify({title: "", body: ""}));
 
+        }
+        else if(response.status == 500){
+            errorMessage.current = "Note was not created.";
+        }
+        else if(response.status == 400){
+            errorMessage.current = "Your note was not found or we had trouble updating it. Try again later.";
+        }
 
     }
 
     async function deleteNote(){
+
+        setCurrentNote((prevNote)=>{
+            return {
+                ...prevNote,
+                title: "",
+                body: ""
+            }
+        });
+
+        setNotesData((prevNotesData)=>{
+                const newNotesData = prevNotesData.filter(note=>{
+                    note._id !== currentNote._id
+                })
+                return newNotesData
+            });
+        localStorage.setItem('note',JSON.stringify({title: "", body: ""}));
+        
         const response = await fetch(`https://tayjournal-api.herokuapp.com/notes/${currentNote["_id"]}`,
         {
             method: "DELETE",
@@ -111,32 +128,15 @@ export default function NoteForm(){
         )
 
         if(response.status == 404){
-            setErrorMessage(`Could not find note this note`);
+            errorMessage.current = `Could not find note this note`;
         }
         else if(response.status == 400){
-            setErrorMessage("Your note was not found or we had trouble deleting it. Try again later.");
-        }
-        else {
-            setCurrentNote((prevNote)=>{
-                return {
-                    ...prevNote,
-                    title: "",
-                    body: ""
-                }
-            })
-
-            setNotesData((prevNotesData)=>{
-                    const newNotesData = prevNotesData.filter(note=>{
-                        note._id !== currentNote._id
-                    })
-                    return newNotesData
-                })
-                localStorage.setItem('note',JSON.stringify({title: "", body: ""}))
+            errorMessage.current = "Your note was not found or we had trouble deleting it. Try again later.";
         }
     }
 
 
-    async function onSubmit(data: FormData ){
+    function onSubmit(data: FormData ){
         if(isForm.add){
             addNote(data)
         }
@@ -147,6 +147,7 @@ export default function NoteForm(){
             deleteNote()
         }
 
+        if(!errorMessage.current){
         setIsForm((prevState)=>{
             return {
                 ...prevState,
@@ -155,6 +156,7 @@ export default function NoteForm(){
                 delete : false
             }
             })
+        }
     }
 
     function formHeader(){
@@ -184,7 +186,7 @@ export default function NoteForm(){
                     
                     <textarea className="h-36 border-2 border-gray-300 focus:outline-none" placeholder="Body" {...register("body", {required: "This field is required", minLength :{value: 4, message: "This title is too short"}})} />
                     <p className="text-red-600 italic font-thin text-sm">{errors.body?.message?.toString()}</p>
-                    <p className="text-red-600 italic font-thin text-sm">{errorMessage}</p>
+                    <p className="text-red-600 italic font-thin text-sm">{errorMessage.current}</p>
                     <input className="mb-2 p-2 border rounded-xl text-white bg-gradient-to-r from-sky-500 to-indigo-500" type="submit"/>
                 </>
             )
@@ -204,13 +206,5 @@ export default function NoteForm(){
         </form>
         </div>
     )
-
-
-
-
-
-
-
-
 
 }
