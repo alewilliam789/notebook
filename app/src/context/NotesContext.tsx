@@ -1,6 +1,6 @@
 import { ReactNode, createContext, useContext, useState, useEffect} from "react";
 
-export interface Note  {
+export interface NoteData  {
     _id? : string;
     title: string;
     body: string;
@@ -9,16 +9,18 @@ export interface Note  {
 
 
 interface NotesContextProps {
-    notesData : Note[];
-    setNotesData: React.Dispatch<React.SetStateAction<Note[]>>;
-
-    currentNote : Note;
-    setCurrentNote : React.Dispatch<React.SetStateAction<Note>>;
+    notesData : NoteData[];
+    setNotesData: React.Dispatch<React.SetStateAction<NoteData[]>>;
 
     isForm: FormBooleans;
     setIsForm: React.Dispatch<React.SetStateAction<FormBooleans>>
 
+    noteIndex: number | null;
+    setNoteIndex: React.Dispatch<React.SetStateAction<number | null>>
+
     user: string;
+
+
 
 }
 
@@ -37,16 +39,15 @@ type ProviderProps = {
 
 export const NotesProvider = ({children}: ProviderProps) => {
 
-    const [notesData, setNotesData] = useState<Note[]>(JSON.parse(localStorage.getItem('notes')||'[]'));
+    const [notesData, setNotesData] = useState<NoteData[]>(JSON.parse(localStorage.getItem('notes')||'[]'));
 
 
     const [isForm, setIsForm] = useState<FormBooleans>({"edit" :false, "add": false, "delete": false});
 
 
     const [user] = useState(localStorage.getItem('user')?.replace(/["]+/g,"") || "");
-    
 
-    const [currentNote, setCurrentNote] =  useState<Note>({title: "", body:""});
+    const [noteIndex, setNoteIndex] = useState<number | null>(null);
     
 
     function fetchNotes() : void {
@@ -57,7 +58,7 @@ export const NotesProvider = ({children}: ProviderProps) => {
             }
             ).then((response)=>{
                 return response.json();
-            }).then((data : Note[])=>{
+            }).then((data : NoteData[])=>{
                 setNotesData([...data])
             }).catch((error : ErrorConstructor)=>{
                 throw new Error (`${error} occured on the GET request`)
@@ -70,7 +71,7 @@ export const NotesProvider = ({children}: ProviderProps) => {
         localStorage.setItem('notes',JSON.stringify(notesData))
     },[notesData.length])
 
-    return <NotesContext.Provider value={{notesData, setNotesData, currentNote, setCurrentNote,isForm, setIsForm, user}}>{children}
+    return <NotesContext.Provider value={{notesData, setNotesData, noteIndex, setNoteIndex,isForm, setIsForm, user}}>{children}
         </NotesContext.Provider>
 };
 
@@ -78,7 +79,7 @@ export const useNotesContext = () => {
     const notesContext = useContext(NotesContext);
 
     if(!notesContext){
-        throw new Error("This hook needs to be used inside a UserProvider")
+        throw new Error("This hook needs to be used inside a NotesProvider")
     }
 
     return notesContext

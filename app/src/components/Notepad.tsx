@@ -1,28 +1,30 @@
 import Note from "./Note";
-import { useNotesContext } from "../context/NotesContext";
-import { useEffect} from "react";
+import { NoteData, useNotesContext } from "../context/NotesContext";
+import { useEffect, useState} from "react";
 import NoteForm from "./NoteForm";
 
 
 export default function Notepad(){
 
-   const {currentNote, setCurrentNote, isForm, setIsForm} = useNotesContext();
-   
+   const {notesData, noteIndex, isForm, setIsForm} = useNotesContext();
+   const [currentNote, setCurrentNote] = useState<NoteData>(JSON.parse(localStorage.getItem('note') || ""))
 
-  useEffect(()=>{
-    if(currentNote.title != ""){
-      localStorage.setItem('note',JSON.stringify(currentNote))
-    }
-    else if(localStorage.getItem('note')){
-      const lastNote = JSON.parse(localStorage.getItem('note') || "");
-      setCurrentNote((prevState)=>{
-        return{
-          ...prevState,
-          ...lastNote
-        }
-      })
-    }
-  },[currentNote.body])
+
+
+   useEffect(()=>{
+
+    const cachedNote : NoteData = JSON.parse(localStorage.getItem('note') || "");
+
+       setCurrentNote((prevState)=>{
+           if(cachedNote){
+               return {
+                   ...prevState,
+                   ...cachedNote
+               }
+            }
+           return prevState
+       })
+   },[notesData, noteIndex])
 
 
   const changeForm = (formOperation : string) =>{
@@ -63,7 +65,7 @@ export default function Notepad(){
   if(isForm.add || isForm.edit || isForm.delete) {
     return (
       <div>
-        <NoteForm />
+        <NoteForm {...{currentNote, setCurrentNote}}/>
       </div>
     )
   }
@@ -75,7 +77,7 @@ export default function Notepad(){
   return (
       <div className="flex gap-96">
         <div>
-          <Note />
+          <Note {...{currentNote}} />
         </div>
         <div className="flex gap-6">
           {addButton}

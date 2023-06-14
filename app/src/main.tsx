@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import ReactDOM from 'react-dom/client';
 import {createBrowserRouter, RouterProvider} from "react-router-dom";
 import App from './App.tsx';
@@ -6,13 +6,15 @@ import './index.css';
 import Login from './pages/Login.tsx';
 import Signup from './pages/Signup.tsx';
 import { NotesProvider } from './context/NotesContext.tsx';
-import { CookiesProvider } from 'react-cookie';
-import ProtectedRoute from './routes/ProtectedRoute.tsx'
+import ProtectedRoute from './routes/ProtectedRoute.tsx';
+import { UserProvider } from './context/UserContext.tsx';
 
 const router = createBrowserRouter([
   {
-    path:"/login",
-    element: <Login />,
+    path:"/",
+
+    element:
+      <Login />
   },
   {
     path:"/signup",
@@ -21,18 +23,20 @@ const router = createBrowserRouter([
   {
     path:"/notebook",
     element:
+    <UserProvider>
      <ProtectedRoute>
         <App />
      </ProtectedRoute>
+    </UserProvider>
   }
 ]);
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <CookiesProvider>
       <NotesProvider>
-        <RouterProvider router={router} />
+        <UserProvider>
+          <RouterProvider router={router} />
+        </UserProvider>
       </NotesProvider>
-    </CookiesProvider>
   </React.StrictMode>,
 )

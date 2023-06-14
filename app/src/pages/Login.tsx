@@ -62,7 +62,8 @@ export default function Login(){
                 })
             }
             else{
-               localStorage.setItem('user', JSON.stringify(data.userName))
+               localStorage.setItem('user', JSON.stringify(data.userName));
+               localStorage.setItem('note',JSON.stringify({"title": "", "body": ""}));
                 navigate("/notebook")
             }
         }
