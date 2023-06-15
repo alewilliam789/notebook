@@ -53,7 +53,7 @@ notesRouter.put("/:noteid", async (req, res) => {
         const query = { _id: new ObjectId(noteId) };
         const result = await collections.notes.updateOne(query, { $set: updatedNote });
         result
-            ? res.status(200).send(`Successfully updated note with id ${noteId}`)
+            ? res.status(200).send(updatedNote)
             : res.status(304).send(`Note with id: ${noteId} not updated`);
     }
     catch (error) {
