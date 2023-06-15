@@ -1,7 +1,9 @@
-import { NoteData } from "../context/NotesContext"
 
 interface NoteProps {
-    currentNote : NoteData
+    _id? : string;
+    title?: string;
+    body?: string;
+    userName?: string;
 }
 
 
@@ -11,10 +13,10 @@ export default function Note(props: NoteProps) {
     return(
         <>
         <div>
-            {props.currentNote.title}
+            {props.title}
         </div>
         <div>
-            {props.currentNote.body}
+            {props.body}
         </div>
         </>
     )

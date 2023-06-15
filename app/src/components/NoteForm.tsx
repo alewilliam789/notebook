@@ -1,7 +1,8 @@
 import { useForm } from "react-hook-form";
 import { NoteData, useNotesContext } from "../context/NotesContext";
 import { useUserContext } from "../context/UserContext";
-
+import { useQueryClient} from "@tanstack/react-query";
+import { useAddNote, useEditNote, useDeleteNote } from "../hooks/customHooks";
 
 
 interface NoteFormProps {
@@ -11,10 +12,16 @@ interface NoteFormProps {
 
 export default function NoteForm(props : NoteFormProps){
 
-
-    const { setNotesData, isForm, setIsForm} = useNotesContext();
+    
+    const {isForm, setIsForm, noteId, setNoteId} = useNotesContext();
     const {user} = useUserContext();
 
+    const queryClient = useQueryClient();
+
+   const addMutation = useAddNote(queryClient,setNoteId);
+   const editMutation = useEditNote(queryClient, props.setCurrentNote);
+   const deleteMutation = useDeleteNote(noteId, setNoteId);
+    
 
     const {register, handleSubmit, formState: {errors}} = useForm(
         {
@@ -30,131 +37,39 @@ export default function NoteForm(props : NoteFormProps){
         body : string;
     }
 
-    async function editNote(data : FormData){
+    function onSubmit(data: FormData){
 
-
-        setNotesData((prevNotesData)=>{
-            const newNotesData = prevNotesData.map((note)=>{
-                if(note._id == props.currentNote._id){
-                    return {
-                        ...props,
-                        ...data
-                    }
-                }
-                else {
-                    return note
-                }
-                })
-                return newNotesData
-            });
-
-        localStorage.setItem('note',JSON.stringify({...props.currentNote, ...data}))
-        
-
-        const response = await fetch(`https://tayjournal-api.herokuapp.com/notes/${props.currentNote._id}`,
-        {
-            method: "PUT",
-            headers: {'Content-Type':'application/json'},
-            body: JSON.stringify({...data}),
-        }
-        )
-
-        if(response.status == 304){
-            throw new Error("Note was not updated")
-        }
-        else if(response.status == 400){
-            throw new Error("Your note was not found or we had trouble updating it. Try again later.");
-        }
-    }
-
-    async function addNote(data: FormData){
-
-
-        const response = await fetch(`https://tayjournal-api.herokuapp.com/notes`,
-        {
-            method: "POST",
-            headers: {'Content-Type':'application/json'},
-            body: JSON.stringify({...data,userName : user}),
-        }
-        )
-
-        if(response.status == 201){
-            response.json().then((data)=>{
-
-                setNotesData((prevNotesData)=>{
-                    return [...prevNotesData, {...data}]
-                })
-
-                localStorage.setItem('note',JSON.stringify({...data}));
-            })
-
-            
-
-        }
-        else if(response.status == 500){
-            throw new Error("Note was not created.");
-        }
-        else if(response.status == 400){
-            throw new Error("Your note was not found or we had trouble updating it. Try again later.");
-        }
-
-    }
-
-    async function deleteNote(){
-
-
-
-        setNotesData((prevNotesData)=>{
-                const newNotesData = prevNotesData.filter((note)=>{
-                    note._id !== props.currentNote._id
-                })
-                return newNotesData
-            });
-        localStorage.setItem('note',JSON.stringify({"title": "", "body": ""}))
-        
-        const response = await fetch(`https://tayjournal-api.herokuapp.com/notes/${props.currentNote._id}`,
-        {
-            method: "DELETE",
-        }
-        )
-
-        if(response.status == 404){
-            throw new Error(`Could not find note this note`);
-        }
-        else if(response.status == 400){
-            throw new Error("Your note was not found or we had trouble deleting it. Try again later.");
-        }
-    }
-
-
-    async function onSubmit(data: FormData ){
-        try {
+        try{
             if(isForm.add){
-                addNote(data)
+                addMutation.mutate({data,user});
             }
             else if(isForm.edit){
-                editNote(data)
+                editMutation.mutate({data, noteId, user});
             }
-            else if(isForm.delete){
-                deleteNote()
+            else{
+                deleteMutation.mutate();
             }
         }
-        catch(e: unknown){
-            if(e instanceof Error){
-                throw(e);
+        catch(error){
+           if(error instanceof Error){
+            throw new Error(error.message.toString())
            }
-
+           else{
+            throw new Error('Unknown error')
+           }
         }
-
-        setIsForm((prevState)=>{
-            return {
-                ...prevState,
-                add : false,
-                edit : false,
-                delete : false
-            }
+        finally{
+            setIsForm((prevState)=>{
+                return {
+                    ...prevState,
+                    add : false,
+                    edit : false,
+                    delete : false
+                }
             })
+        }
     }
+        
 
     function formHeader(){
 
@@ -170,9 +85,9 @@ export default function NoteForm(props : NoteFormProps){
     function formText(){
         if(isForm.delete){
             return (
-             <>
+            <>
                 <input className="mb-2 p-2 border rounded-xl text-white bg-gradient-to-r from-sky-500 to-indigo-500" type="submit"/>
-             </>
+            </>
             )
         }
         else {
@@ -183,6 +98,7 @@ export default function NoteForm(props : NoteFormProps){
                     
                     <textarea className="h-36 border-2 border-gray-300 focus:outline-none" placeholder="Body" {...register("body", {required: "This field is required", minLength :{value: 4, message: "This title is too short"}})} />
                     <p className="text-red-600 italic font-thin text-sm">{errors.body?.message?.toString()}</p>
+                    <p className="text-red-600 italic font-thin text-sm">{``}</p>
                     <input className="mb-2 p-2 border rounded-xl text-white bg-gradient-to-r from-sky-500 to-indigo-500" type="submit"/>
                 </>
             )
