@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { NoteData } from "../context/NotesContext";
 import { fetchNote, fetchNotes, addNote, editNote, deleteNote } from "../FetchAPI";
 import { useQuery, useMutation, QueryClient} from "@tanstack/react-query";
@@ -14,8 +15,30 @@ export function useNotes(user : string) {
         return  useQuery<NoteData[], Error>(['notes'], ()=>fetchNotes(user));
 }
 
+type cachedReturn = [NoteData, React.Dispatch<React.SetStateAction<NoteData>>];
 
-interface FormData{
+
+
+export function useCachedNote(){
+       const [cachedNote,setCachedNote] = useState<NoteData>({"_id" : "", "title":"","body":""});
+       useEffect(()=>{
+        const localNote = JSON.parse(localStorage.getItem('note')||"")
+        if(localNote){
+                setCachedNote((prevNote)=>{
+                        return {
+                          ...prevNote,
+                          ...localNote
+                        }
+                })
+        }
+       },[])
+
+       const cachedReturn : cachedReturn = [cachedNote,setCachedNote];
+       return cachedReturn
+}
+
+
+interface FormData {
         title : string;
         body : string;
 }
@@ -29,21 +52,18 @@ interface addMutate {
         user : string
 }
 
-export function useAddNote(queryClient : QueryClient, setNoteId : React.Dispatch<React.SetStateAction<string>>){
+export function useAddNote(setNoteId : React.Dispatch<React.SetStateAction<string>>){
         return useMutation(
                 {
                     mutationFn: ({data, user} : addMutate) =>{
                         return addNote(data,user)
                     },
-                    onSuccess: (data : NoteData) => {
-                        setNoteId(data._id);
-                        localStorage.setItem('note', JSON.stringify(data))
-                        queryClient.setQueryData(['note',{id : data._id}],data)
+                    onSuccess: () => {
+                        setNoteId('');
                     },
                     onError: (e: Error) =>{
                         throw new Error(e.message.toString())
                     }
-        
                 }
                 )         
 }
@@ -79,9 +99,16 @@ export function useEditNote(queryClient : QueryClient, setCurrentNote : React.Di
                 })
 }
 
-export function useDeleteNote(noteId: string, setNoteId : React.Dispatch<React.SetStateAction<string>>){
+export function useDeleteNote(noteId: string, setNoteId : React.Dispatch<React.SetStateAction<string>>, setCurrentNote : React.Dispatch<React.SetStateAction<NoteData>>){
         return useMutation({
                 mutationFn : () => {
+                        setCurrentNote((prevNote)=>{
+                                return {
+                                        ...prevNote,
+                                        "title" : "",
+                                        "body" : ""
+                                }
+                        })
                     return deleteNote(noteId)
                 },
                 onSuccess: () =>{

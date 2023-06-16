@@ -1,6 +1,6 @@
 import Sidebar from "./components/Sidebar";
 import Notepad from "./components/Notepad";
-import LogoutButton from "./components/LogoutButton";
+import ActionButton from "./components/ActionButton";
 
 
 export default function App(): React.JSX.Element {
@@ -12,8 +12,10 @@ export default function App(): React.JSX.Element {
       <nav>
         <Sidebar />
       </nav>
-      <main>
-        <LogoutButton />
+      <main className="w-full flex flex-col gap-12">
+        <div className="m-6 self-end">
+          <ActionButton action={"logout"} icon={"Logout"} />
+        </div>
         <Notepad />
       </main>
     </section>

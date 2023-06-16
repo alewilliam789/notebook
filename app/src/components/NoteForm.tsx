@@ -6,8 +6,8 @@ import { useAddNote, useEditNote, useDeleteNote } from "../hooks/customHooks";
 
 
 interface NoteFormProps {
-    currentNote : NoteData;
-    setCurrentNote : React.Dispatch<React.SetStateAction<NoteData>>;
+    cachedNote : NoteData;
+    setCachedNote : React.Dispatch<React.SetStateAction<NoteData>>;
 }
 
 export default function NoteForm(props : NoteFormProps){
@@ -18,16 +18,16 @@ export default function NoteForm(props : NoteFormProps){
 
     const queryClient = useQueryClient();
 
-   const addMutation = useAddNote(queryClient,setNoteId);
-   const editMutation = useEditNote(queryClient, props.setCurrentNote);
-   const deleteMutation = useDeleteNote(noteId, setNoteId);
+   const addMutation = useAddNote(setNoteId);
+   const editMutation = useEditNote(queryClient, props.setCachedNote);
+   const deleteMutation = useDeleteNote(noteId, setNoteId, props.setCachedNote);
     
 
     const {register, handleSubmit, formState: {errors}} = useForm(
         {
             defaultValues: {
-                title : `${props.currentNote.title}`,
-                body : `${props.currentNote.body}`
+                title : `${props.cachedNote.title}`,
+                body : `${props.cachedNote.body}`
             }
         }
     );
@@ -111,7 +111,16 @@ export default function NoteForm(props : NoteFormProps){
         <div className="w-96  mx-auto mt-20 border border-gray-800">
         <form id="user" className="p-6 grid gap-5" onSubmit={handleSubmit(onSubmit)}>
                 <div className="flex flex-col gap-10">
-                    <button type="button" className="self-end font-bold" onClick={()=>{setIsForm((prevState)=>{return {...prevState, add: false, edit : false, delete: false}})}}>X</button>
+                    <button type="button" className="self-end font-bold" onClick={()=>{
+                        setIsForm((prevState)=>{return {...prevState, add: false, edit : false, delete: false}})
+                        const cachedNote = JSON.parse(localStorage.getItem('note') || "");
+                        props.setCachedNote((prevNote)=>{
+                            return {
+                                ...prevNote,
+                                ...cachedNote
+                            }
+                        })
+                }}>X</button>
                     <label className="mb-10 text-center text-2xl"> {formHeader()}</label>
                 </div>
                 {formText()}

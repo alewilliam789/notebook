@@ -5,7 +5,7 @@
 import {NoteData, useNotesContext } from "../context/NotesContext"
 import {useNotes } from '../hooks/customHooks';
 import { useUserContext } from '../context/UserContext';
-import { useEffect } from "react";
+import { Fragment, useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 
 
@@ -31,11 +31,16 @@ export default function Sidebar(): React.JSX.Element{
         const liList = data.map((note) =>{
             localStorage.setItem('noteid',note._id);
             queryClient.setQueryData(['note', {id : note._id}], note)
-            return <li value={`${note._id}`} onClick={()=>{handleClick(note)}} key={note._id}>{note.title}</li>
+            return (
+            <Fragment key={note._id}>
+                <li>
+                    <button className="text-start" value={`${note._id}`} onClick={()=>{handleClick(note)}}>{note.title}</button>
+                </li>
+            </Fragment>)
         })
         return (
             <div className="">
-                <ol>
+                <ol className="p-6 flex flex-col gap-6">
                     {liList}
                 </ol>
             </div>

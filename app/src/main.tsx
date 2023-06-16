@@ -15,13 +15,12 @@ import { UserProvider } from './context/UserContext.tsx';
 const router = createBrowserRouter([
   {
     path:"/",
-
     element:
       <Login />
   },
   {
     path:"/signup",
-    element:<Signup />,
+    element:<Signup />
   },
   {
     path:"/notebook",

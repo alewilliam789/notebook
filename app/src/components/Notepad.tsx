@@ -1,19 +1,20 @@
 import Note from "./Note";
-import { NoteData, useNotesContext } from "../context/NotesContext";
-import { useEffect, useState} from "react";
+import { useNotesContext } from "../context/NotesContext";
+import { useEffect} from "react";
 import NoteForm from "./NoteForm";
-import { useNote} from "../hooks/customHooks";
+import { useCachedNote, useNote} from "../hooks/customHooks";
+import ActionButton from "./ActionButton";
 
 
 export default function Notepad(){
 
-  const {noteId, isForm, setIsForm} = useNotesContext();
-  const [currentNote, setCurrentNote] = useState<NoteData>(JSON.parse(localStorage.getItem('note') || "") || {"_id": "", "title": "", "body" : ""});
+  const {noteId, isForm} = useNotesContext();
+  const [cachedNote, setCachedNote] = useCachedNote();
   const note = useNote(noteId);
 
 
   useEffect(()=>{
-    setCurrentNote((prevNote)=>{
+    setCachedNote((prevNote)=>{
       if(noteId){
         return {
           ...prevNote,
@@ -26,72 +27,28 @@ export default function Notepad(){
 
   
 
-  
-
-  const changeForm = (formOperation : string) =>{
-    if(formOperation == "add"){
-      setIsForm((prevState)=>{
-        return {
-          ...prevState,
-          add: true
-        }
-      });
-      setCurrentNote((prevNote)=>{
-        return {
-          ...prevNote,
-          title: "",
-          body: "",
-        }
-      });
-      }
-    else if(formOperation == "edit"){
-      setIsForm((prevState)=>{
-        return {
-          ...prevState,
-          edit: true
-        }
-      })
-    }
-    else{
-      setIsForm((prevState)=>{
-        return {
-          ...prevState,
-          delete: true
-        }
-      })
-      setCurrentNote((prevNote)=>{
-        return {
-          ...prevNote,
-          title: "",
-          body: "",
-        }
-      });
-    }
-  };
-
 
   if(isForm.add || isForm.edit || isForm.delete) {
     return (
-      <div>
-        <NoteForm {...{currentNote, setCurrentNote}}/>
-      </div>
+      <>
+        <NoteForm {...{cachedNote, setCachedNote}}/>
+      </>
     )
-  }
-  const addButton = <button onClick={()=>{changeForm("add")}}>+</button>;
-  const editButton = <button onClick={()=>{changeForm("edit")}}>Edit</button> 
-  const deleteButton = <button onClick={()=>{changeForm("delete")}}>Delete</button>
+    }
    
 
   return (
-      <div className="flex gap-96">
+    <>
+     <div className="flex justify-center gap-12">
+          <ActionButton  action={"add"} icon={"+"} setCachedNote={setCachedNote}/>
+          <ActionButton  action={"edit"} icon={"Edit"} />
+          <ActionButton  action={"delete"} icon={"Delete"} />
+      </div>
+      <div className="">
         <div>
-          <Note {...!note.data ? note.data : currentNote} />
-        </div>
-        <div className="flex gap-6">
-          {addButton}
-          {editButton}
-          {deleteButton}
+          <Note {...!note.data ? note.data : cachedNote} />
         </div>
       </div>
+    </>
   )
 }
