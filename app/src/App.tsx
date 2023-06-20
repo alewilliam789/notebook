@@ -1,6 +1,5 @@
-import Sidebar from "./components/Sidebar";
-import Notepad from "./components/Notepad";
 import ActionButton from "./components/ActionButton";
+import NoteList from "./components/NoteList";
 
 
 export default function App(): React.JSX.Element {
@@ -8,15 +7,14 @@ export default function App(): React.JSX.Element {
 
   return (
     <>
-    <section className="flex gap-10 bg-gradient-to- from-sky-500">
-      <nav>
-        <Sidebar />
-      </nav>
-      <main className="w-full flex flex-col gap-12">
-        <div className="m-6 self-end">
+    <section className="flex gap-10">
+      <main className="w-screen h-screen bg-gray-800 flex flex-col gap-6">
+        <div className="self-end bg-white">
           <ActionButton action={"logout"} icon={"Logout"} />
         </div>
-        <Notepad />
+        <div className="px-36 w-screen self-center overflow-auto">
+          <NoteList />
+        </div>
       </main>
     </section>
     </>

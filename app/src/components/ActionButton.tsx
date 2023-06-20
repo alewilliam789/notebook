@@ -1,57 +1,70 @@
-import { NoteData ,useNotesContext } from "../context/NotesContext";
+import { useState , useLayoutEffect } from 'react';
 import { useNavigate } from "react-router-dom";
-import { useState } from 'react';
+
+
+import { FormBooleans, NoteData } from './Note';
 
 interface ActionButtonProps {
     action : string,
     icon : string | JSX.Element,
+    setIsForm? : React.Dispatch<React.SetStateAction<FormBooleans>>,
     setCachedNote? : React.Dispatch<React.SetStateAction<NoteData>>
 } 
 
 
-export default function ActionButton(props : ActionButtonProps){
+export default function ActionButton({action, icon, setIsForm, setCachedNote} : ActionButtonProps){
 
-    const {setNoteId, setIsForm} = useNotesContext()
 
     const navigate = useNavigate();
 
-    const changeForm = (formOperation : string) =>{
-        if(formOperation == "add"){
-          setIsForm((prevState)=>{
-            return {
-              ...prevState,
-              add: true
-            }
-          });
-          }
-        else if(formOperation == "edit"){
-          setIsForm((prevState)=>{
-            return {
-              ...prevState,
-              edit: true
-            }
-          })
+    const [styleClass, setStyleClass] = useState<string>("");
+
+    useLayoutEffect(()=>{
+        if(action == 'logout'){
+            setStyleClass("")
         }
         else{
-          setIsForm((prevState)=>{
-            return {
-              ...prevState,
-              delete: true
-            }
-          })
+            setStyleClass("w-16 h-16 bg-white flex justify-center border rounded-full")
         }
-      };
+    },[])
+
+    const changeForm = (formOperation : string) =>{
+      if(setIsForm){
+          if(formOperation == "add"){
+            setIsForm((prevState)=>{
+              return {
+                ...prevState,
+                add: true
+              }
+            });
+            }
+          else if(formOperation == "edit"){
+            setIsForm((prevState)=>{
+              return {
+                ...prevState,
+                edit: true
+              }
+            })
+          }
+          else{
+            setIsForm((prevState)=>{
+              return {
+                ...prevState,
+                delete: true
+              }
+            })
+          }
+      }
+    };
 
 
-    function handleClick(action : string){
+    function handleClick(){
         if(action == "logout"){
-            setNoteId("")
-            localStorage.clear();
             navigate('/')
         }
         else{
-            if(typeof props.setCachedNote != 'undefined'){
-                props.setCachedNote((prevNote)=>{
+            if(typeof setCachedNote != 'undefined'){
+                setCachedNote((prevNote)=>{
                     return {
                         ...prevNote,
                         title : "",
@@ -66,7 +79,7 @@ export default function ActionButton(props : ActionButtonProps){
 
 
     return (
-        <button onClick={() => handleClick(props.action)}>{props.icon}</button>
+        <button className={styleClass} onClick={() => handleClick()}>{icon}</button>
     )
 
 

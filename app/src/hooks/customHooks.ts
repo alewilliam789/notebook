@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
+import { useQuery, useMutation, QueryClient} from "@tanstack/react-query";
+
 import { NoteData } from "../context/NotesContext";
 import { fetchNote, fetchNotes, addNote, editNote, deleteNote } from "../FetchAPI";
-import { useQuery, useMutation, QueryClient} from "@tanstack/react-query";
 
 
 
@@ -52,14 +53,11 @@ interface addMutate {
         user : string
 }
 
-export function useAddNote(setNoteId : React.Dispatch<React.SetStateAction<string>>){
+export function useAddNote(){
         return useMutation(
                 {
                     mutationFn: ({data, user} : addMutate) =>{
                         return addNote(data,user)
-                    },
-                    onSuccess: () => {
-                        setNoteId('');
                     },
                     onError: (e: Error) =>{
                         throw new Error(e.message.toString())
@@ -99,7 +97,7 @@ export function useEditNote(queryClient : QueryClient, setCurrentNote : React.Di
                 })
 }
 
-export function useDeleteNote(noteId: string, setNoteId : React.Dispatch<React.SetStateAction<string>>, setCurrentNote : React.Dispatch<React.SetStateAction<NoteData>>){
+export function useDeleteNote(_id: string, setCurrentNote : React.Dispatch<React.SetStateAction<NoteData>>){
         return useMutation({
                 mutationFn : () => {
                         setCurrentNote((prevNote)=>{
@@ -109,11 +107,10 @@ export function useDeleteNote(noteId: string, setNoteId : React.Dispatch<React.S
                                         "body" : ""
                                 }
                         })
-                    return deleteNote(noteId)
+                    return deleteNote(_id)
                 },
                 onSuccess: () =>{
                         localStorage.setItem('note',JSON.stringify({title : "", body: ""}))
-                        setNoteId("")
                 },
                 onError: (e: Error) =>{
                         throw new Error(e.message.toString())

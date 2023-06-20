@@ -1,9 +1,15 @@
+import { useEffect} from "react";
+
 import Note from "./Note";
 import { useNotesContext } from "../context/NotesContext";
-import { useEffect} from "react";
 import NoteForm from "./NoteForm";
 import { useCachedNote, useNote} from "../hooks/customHooks";
 import ActionButton from "./ActionButton";
+
+import editLogo from '../images/edit.png';
+import deleteLogo from '../images/delete.png';
+import addLogo from '../images/add.png';
+import Collapsible from "./Collapsible";
 
 
 export default function Notepad(){
@@ -39,16 +45,18 @@ export default function Notepad(){
 
   return (
     <>
-     <div className="flex justify-center gap-12">
-          <ActionButton  action={"add"} icon={"+"} setCachedNote={setCachedNote}/>
-          <ActionButton  action={"edit"} icon={"Edit"} />
-          <ActionButton  action={"delete"} icon={"Delete"} />
+    <div className="flex flex-col gap-32">
+     <div className="self-center flex justify-center gap-12">
+          <ActionButton  action={"add"} icon={<img className="self-center" src={addLogo} alt="+"/>} setCachedNote={setCachedNote}/>
+
       </div>
-      <div className="">
+      <div className="w-full self-center shadow-inner">
         <div>
-          <Note {...!note.data ? note.data : cachedNote} />
+            <Note {...!note.data ? note.data : cachedNote} />
         </div>
       </div>
+    </div>
+    
     </>
   )
 }

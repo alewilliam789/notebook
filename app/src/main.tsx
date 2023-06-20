@@ -4,13 +4,15 @@ import {createBrowserRouter, RouterProvider} from "react-router-dom";
 import { QueryClient } from "@tanstack/react-query";
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client';
 import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister';
+
 import App from './App.tsx';
-import './index.css';
 import Login from './pages/Login.tsx';
 import Signup from './pages/Signup.tsx';
 import { NotesProvider } from './context/NotesContext.tsx';
 import ProtectedRoute from './routes/ProtectedRoute.tsx';
 import { UserProvider } from './context/UserContext.tsx';
+
+import './index.css';
 
 const router = createBrowserRouter([
   {

@@ -1,36 +1,58 @@
 import { useForm } from "react-hook-form";
-import { NoteData, useNotesContext } from "../context/NotesContext";
-import { useUserContext } from "../context/UserContext";
 import { useQueryClient} from "@tanstack/react-query";
+
+import { useUserContext } from "../context/UserContext";
 import { useAddNote, useEditNote, useDeleteNote } from "../hooks/customHooks";
+import { useState, useRef, useLayoutEffect } from "react";
+import { FormBooleans, NoteData } from "./Note";
 
 
 interface NoteFormProps {
-    cachedNote : NoteData;
-    setCachedNote : React.Dispatch<React.SetStateAction<NoteData>>;
+    currentNote : NoteData;
+    setCurrentNote : React.Dispatch<React.SetStateAction<NoteData>>;
+    isForm : FormBooleans;
+    setIsForm : React.Dispatch<React.SetStateAction<FormBooleans>>
+
 }
 
-export default function NoteForm(props : NoteFormProps){
+export default function NoteForm({currentNote, setCurrentNote, isForm, setIsForm} : NoteFormProps){
 
     
-    const {isForm, setIsForm, noteId, setNoteId} = useNotesContext();
     const {user} = useUserContext();
 
     const queryClient = useQueryClient();
 
-   const addMutation = useAddNote(setNoteId);
-   const editMutation = useEditNote(queryClient, props.setCachedNote);
-   const deleteMutation = useDeleteNote(noteId, setNoteId, props.setCachedNote);
-    
+   const addMutation = useAddNote();
+   const editMutation = useEditNote(queryClient, setCurrentNote);
+   const deleteMutation = useDeleteNote(currentNote._id, setCurrentNote);
+   
+   const [value, setValue] = useState(currentNote.body);
+   const textAreaRef = useRef<HTMLTextAreaElement>(null);
+
+   useLayoutEffect(()=>{
+    if(textAreaRef.current){
+        textAreaRef.current.style.height = "0";
+        const scrollHeight = textAreaRef.current.scrollHeight;
+
+        textAreaRef.current.style.height = scrollHeight + "px";
+    }
+   },[textAreaRef, value]);
+
+   const handleChange = (evt: React.ChangeEvent<HTMLTextAreaElement>) => {
+   const val = evt.target?.value;
+
+    setValue(val);
+  };
 
     const {register, handleSubmit, formState: {errors}} = useForm(
         {
             defaultValues: {
-                title : `${props.cachedNote.title}`,
-                body : `${props.cachedNote.body}`
+                title : `${currentNote.title}`,
+                body : `${currentNote.body}`
             }
         }
     );
+    const { ref, ...rest } = register('body',{onChange: (evt: React.ChangeEvent<HTMLTextAreaElement>)=>{handleChange(evt)}});
 
     interface FormData{
         title : string;
@@ -39,48 +61,39 @@ export default function NoteForm(props : NoteFormProps){
 
     function onSubmit(data: FormData){
 
-        try{
-            if(isForm.add){
-                addMutation.mutate({data,user});
-            }
-            else if(isForm.edit){
-                editMutation.mutate({data, noteId, user});
-            }
-            else{
-                deleteMutation.mutate();
-            }
-        }
-        catch(error){
-           if(error instanceof Error){
-            throw new Error(error.message.toString())
-           }
-           else{
-            throw new Error('Unknown error')
-           }
-        }
-        finally{
-            setIsForm((prevState)=>{
-                return {
-                    ...prevState,
-                    add : false,
-                    edit : false,
-                    delete : false
-                }
-            })
-        }
-    }
-        
+        console.log(data)
 
-    function formHeader(){
-
-        if(isForm.add){
-            return "Add Note"
-        }
-        else if(isForm.edit){
-            return "Edit Note"
-        }
-        return "Are you sure you want to delete this note?"
+        // try{
+        //     if(isForm.add){
+        //         addMutation.mutate({data,user});
+        //     }
+        //     else if(isForm.edit){
+        //         editMutation.mutate({data, noteId, user});
+        //     }
+        //     else{
+        //         deleteMutation.mutate();
+        //     }
+        // }
+        // catch(error){
+        //    if(error instanceof Error){
+        //     throw new Error(error.message.toString())
+        //    }
+        //    else{
+        //     throw new Error('Unknown error')
+        //    }
+        // }
+        // finally{
+        //     setIsForm((prevState)=>{
+        //         return {
+        //             ...prevState,
+        //             add : false,
+        //             edit : false,
+        //             delete : false
+        //         }
+        //     })
+        // }
     }
+    
 
     function formText(){
         if(isForm.delete){
@@ -93,13 +106,16 @@ export default function NoteForm(props : NoteFormProps){
         else {
             return (
                 <>
-                    <input className="border-2 border-gray-300 focus:outline-none" placeholder="Title" {...register("title", {required: "This field is required", minLength :{value: 4, message: "This title is too short"}})}/>
-                    <p className="text-red-600 italic font-thin text-sm">{errors.title?.message?.toString()}</p>
-                    
-                    <textarea className="h-36 border-2 border-gray-300 focus:outline-none" placeholder="Body" {...register("body", {required: "This field is required", minLength :{value: 4, message: "This title is too short"}})} />
+                    <textarea
+                        className="bg-yellow-200 focus:outline-none tracking-wide leading-10"
+                        ref={textAreaRef}
+                        rows={1}
+                        value={value}
+                        {...rest}
+                    />
                     <p className="text-red-600 italic font-thin text-sm">{errors.body?.message?.toString()}</p>
                     <p className="text-red-600 italic font-thin text-sm">{``}</p>
-                    <input className="mb-2 p-2 border rounded-xl text-white bg-gradient-to-r from-sky-500 to-indigo-500" type="submit"/>
+                    <input className="mb-2 p-2 border rounded-xl text-white bg-gradient-to-r from-sky-500 to-indigo-500" type="submit" />
                 </>
             )
         }
@@ -108,24 +124,15 @@ export default function NoteForm(props : NoteFormProps){
 
 
     return (
-        <div className="w-96  mx-auto mt-20 border border-gray-800">
-        <form id="user" className="p-6 grid gap-5" onSubmit={handleSubmit(onSubmit)}>
+        <>
+        <form id="user" className="h-max p-6 grid gap-5" onSubmit={handleSubmit(onSubmit)}>
                 <div className="flex flex-col gap-10">
                     <button type="button" className="self-end font-bold" onClick={()=>{
-                        setIsForm((prevState)=>{return {...prevState, add: false, edit : false, delete: false}})
-                        const cachedNote = JSON.parse(localStorage.getItem('note') || "");
-                        props.setCachedNote((prevNote)=>{
-                            return {
-                                ...prevNote,
-                                ...cachedNote
-                            }
-                        })
-                }}>X</button>
-                    <label className="mb-10 text-center text-2xl"> {formHeader()}</label>
+                        setIsForm((prevState)=>{return {...prevState, add: false, edit : false, delete: false}});}}>X</button>
                 </div>
                 {formText()}
         </form>
-        </div>
+        </>
     )
 
 }
