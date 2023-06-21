@@ -1,3 +1,23 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+@layer base{
+    /* styling blue horizontal lines */
+.pattern {
+    height: max-content;
+    background-image: repeating-linear-gradient(rgb(254 240 138) 0px, rgb(254 240 138) 24px, teal 25px);
+  }
+  
+  /* styling text content */
+  .content {
+    padding-top: 6px;
+    padding-left: 56px;
+    padding-right: 16px;
+    line-height: 25px;
+    font-size: 19px;
+    letter-spacing: 1px;
+    word-spacing: 5px;
+  }
+}

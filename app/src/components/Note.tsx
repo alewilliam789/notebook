@@ -1,11 +1,15 @@
+import { useEffect, useState } from 'react';
 import { useCollapse } from "react-collapsed"
+
 
 import ActionButton from "./ActionButton"
 import NoteForm from './NoteForm'
 
+
 import editLogo from '../images/edit.png'
 import deleteLogo from '../images/delete.png'
-import { useEffect, useState } from 'react';
+
+
 
 export interface NoteData  {
     _id : string;
@@ -47,7 +51,7 @@ export default function Note(props: NoteData) {
     return(
         <>
         <div className="w-full bg-yellow-200 rounded-sm">
-        <button className="px-8 pt-3 pb-3 w-full bg-yellow-200 rounded-sm text-center text-xl" {...getToggleProps()}>{currentNote.title}</button>
+        <button className="px-8 pt-3 pb-3 w-full rounded-sm text-center text-xl" {...getToggleProps()}>{currentNote.title}</button>
         <div className="flex justify-center content-center" {...getCollapseProps()}>
                 <section className="w-full rounded-sm">
                         <div className="p-8 flex justify-end gap-6 ">
@@ -57,7 +61,7 @@ export default function Note(props: NoteData) {
                     { isForm.edit || isForm.delete ? 
                          <NoteForm {...{isForm,setIsForm, currentNote, setCurrentNote}}/>
                         :
-                        <div className="px-8 pb-8 tracking-wide leading-10">
+                        <div className="pattern content">
                             {currentNote.body}
                         </div>
                     }
