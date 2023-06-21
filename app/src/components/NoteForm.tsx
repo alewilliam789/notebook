@@ -107,7 +107,7 @@ export default function NoteForm({currentNote, setCurrentNote, isForm, setIsForm
             return (
                 <>
                     <textarea
-                        className="bg-yellow-200 focus:outline-none tracking-wide leading-10"
+                        className="pattern content focus:outline-none"
                         ref={textAreaRef}
                         rows={1}
                         value={value}
