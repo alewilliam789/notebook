@@ -7,17 +7,18 @@
     /* styling blue horizontal lines */
 .pattern {
     height: max-content;
-    background-image: repeating-linear-gradient(rgb(254 240 138) 0px, rgb(254 240 138) 24px, teal 25px);
+    background-image: repeating-linear-gradient(rgb(254 240 138) 0px, rgb(254 240 138) 24px, rgb(220 38 38) 25px);
   }
   
   /* styling text content */
   .content {
-    padding-top: 6px;
-    padding-left: 56px;
-    padding-right: 16px;
+    padding-top: 2px;
+    padding-bottom: 20px;
+    padding-left: 50px;
+    padding-right: 50px;
     line-height: 25px;
     font-size: 19px;
     letter-spacing: 1px;
-    word-spacing: 5px;
+    word-spacing: 8px;
   }
 }

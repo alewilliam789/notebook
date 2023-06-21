@@ -12,7 +12,7 @@ export default function App(): React.JSX.Element {
         <div className="self-end bg-white">
           <ActionButton action={"logout"} icon={"Logout"} />
         </div>
-        <div className="px-64 w-screen self-center overflow-auto">
+        <div className="px-24 w-screen self-center overflow-auto">
           <NoteList />
         </div>
       </main>

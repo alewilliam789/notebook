@@ -8,11 +8,12 @@ interface ActionButtonProps {
     action : string,
     icon : string | JSX.Element,
     setIsForm? : React.Dispatch<React.SetStateAction<FormBooleans>>,
+    setIsAdd? : React.Dispatch<React.SetStateAction<boolean>>,
     setCachedNote? : React.Dispatch<React.SetStateAction<NoteData>>
 } 
 
 
-export default function ActionButton({action, icon, setIsForm, setCachedNote} : ActionButtonProps){
+export default function ActionButton({action, icon, setIsForm, setIsAdd, setCachedNote} : ActionButtonProps){
 
 
     const navigate = useNavigate();
@@ -30,15 +31,7 @@ export default function ActionButton({action, icon, setIsForm, setCachedNote} : 
 
     const changeForm = (formOperation : string) =>{
       if(setIsForm){
-          if(formOperation == "add"){
-            setIsForm((prevState)=>{
-              return {
-                ...prevState,
-                add: true
-              }
-            });
-            }
-          else if(formOperation == "edit"){
+          if(formOperation == "edit"){
             setIsForm((prevState)=>{
               return {
                 ...prevState,
@@ -54,6 +47,11 @@ export default function ActionButton({action, icon, setIsForm, setCachedNote} : 
               }
             })
           }
+      }
+      if(setIsAdd){
+        if(formOperation == "add"){
+          setIsAdd(true)
+        }
       }
     };
 

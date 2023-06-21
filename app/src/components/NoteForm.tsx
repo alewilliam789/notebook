@@ -11,9 +11,15 @@ interface NoteFormProps {
     currentNote : NoteData;
     setCurrentNote : React.Dispatch<React.SetStateAction<NoteData>>;
     isForm : FormBooleans;
-    setIsForm : React.Dispatch<React.SetStateAction<FormBooleans>>
+    setIsForm : React.Dispatch<React.SetStateAction<FormBooleans>>;
 
 }
+
+interface FormData{
+    title : string;
+    body : string;
+}
+
 
 export default function NoteForm({currentNote, setCurrentNote, isForm, setIsForm} : NoteFormProps){
 
@@ -22,27 +28,27 @@ export default function NoteForm({currentNote, setCurrentNote, isForm, setIsForm
 
     const queryClient = useQueryClient();
 
-   const addMutation = useAddNote();
-   const editMutation = useEditNote(queryClient, currentNote._id, setCurrentNote);
-   const deleteMutation = useDeleteNote(currentNote._id, setCurrentNote);
-   
-   const [value, setValue] = useState(currentNote.body);
-   const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
+    const addMutation = useAddNote(queryClient);
+    const editMutation = useEditNote(queryClient, currentNote._id ? currentNote._id : "randokey", setCurrentNote);
+    const deleteMutation = useDeleteNote(currentNote._id ?  currentNote._id : "randokey", queryClient, setCurrentNote);
 
-   useLayoutEffect(()=>{
+    const [value, setValue] = useState(currentNote.body);
+    const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
+
+    useLayoutEffect(()=>{
     if(textAreaRef.current){
         textAreaRef.current.style.height = "0";
         const scrollHeight = textAreaRef.current.scrollHeight;
 
         textAreaRef.current.style.height = scrollHeight + "px";
     }
-   },[textAreaRef, value]);
+    },[textAreaRef, value]);
 
-   const handleChange = (evt: React.ChangeEvent<HTMLTextAreaElement>) => {
-   const val = evt.target?.value;
+    const handleChange = (evt: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const val = evt.target?.value;
 
     setValue(val);
-  };
+    };
 
     const {register, handleSubmit, formState: {errors}} = useForm(
         {
@@ -54,44 +60,38 @@ export default function NoteForm({currentNote, setCurrentNote, isForm, setIsForm
     );
     const { ref, onChange, ...rest } = register('body');
 
-    interface FormData{
-        title : string;
-        body : string;
-    }
-
+    
     function onSubmit(data: FormData){
 
-        console.log(data);
-
-        // try{
-        //     if(isForm.add){
-        //         addMutation.mutate({data, user});
-        //     }
-        //     else if(isForm.edit){
-        //         editMutation.mutate({data, user});
-        //     }
-        //     else{
-        //         deleteMutation.mutate();
-        //     }
-        // }
-        // catch(error){
-        //    if(error instanceof Error){
-        //     throw new Error(error.message.toString())
-        //    }
-        //    else{
-        //     throw new Error('Unknown error')
-        //    }
-        // }
-        // finally{
-        //     setIsForm((prevState)=>{
-        //         return {
-        //             ...prevState,
-        //             add : false,
-        //             edit : false,
-        //             delete : false
-        //         }
-        //     })
-        // }
+        try{
+            if(isForm.add){
+                addMutation.mutate({data, user});
+            }
+            else if(isForm.edit){
+                editMutation.mutate({data, user});
+            }
+            else{
+                deleteMutation.mutate();
+            }
+        }
+        catch(error){
+           if(error instanceof Error){
+            throw new Error(error.message.toString())
+           }
+           else{
+            throw new Error('Unknown error')
+           }
+        }
+        finally{
+            setIsForm((prevState)=>{
+                return {
+                    ...prevState,
+                    edit : false,
+                    delete : false,
+                    add : false
+                }
+            })
+        }
     }
     
 
@@ -99,7 +99,7 @@ export default function NoteForm({currentNote, setCurrentNote, isForm, setIsForm
         if(isForm.delete){
             return (
             <>
-                <label>Are you sure you want to delete this note?</label>
+                <label className="mb-16 font-bold text-center text-2xl">Are you sure you want to delete this note?</label>
                 <input className="mb-2 p-2 border rounded-xl text-white bg-gradient-to-r from-sky-500 to-indigo-500" type="submit"/>
             </>
             )
@@ -107,6 +107,7 @@ export default function NoteForm({currentNote, setCurrentNote, isForm, setIsForm
         else {
             return (
                 <>
+                    <input className="content bg-yellow-200 text-center focus:outline-none" placeholder="Title" {...register("title", {required: "This field is required", minLength :{value: 4, message: "This title is too short"}})}/>
                     <textarea
                         className="pattern content focus:outline-none"
                         ref={(e)=>{
@@ -115,6 +116,7 @@ export default function NoteForm({currentNote, setCurrentNote, isForm, setIsForm
                         }}
                         rows={1}
                         value={value}
+                        placeholder="Add your journal entry here..."
                         onChange={e=>{ 
                             onChange(e);
                             handleChange(e)
@@ -136,7 +138,8 @@ export default function NoteForm({currentNote, setCurrentNote, isForm, setIsForm
         <form id="user" className="h-max p-6 grid gap-5" onSubmit={handleSubmit(onSubmit)}>
                 <div className="flex flex-col gap-10">
                     <button type="button" className="self-end font-bold" onClick={()=>{
-                        setIsForm((prevState)=>{return {...prevState, add: false, edit : false, delete: false}});}}>X</button>
+                        setIsForm((prevState)=>{return {...prevState, edit : false, delete: false, add: false}});
+                        }}>X</button>
                 </div>
                 {formText()}
         </form>
