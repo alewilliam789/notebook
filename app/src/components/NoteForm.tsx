@@ -23,11 +23,11 @@ export default function NoteForm({currentNote, setCurrentNote, isForm, setIsForm
     const queryClient = useQueryClient();
 
    const addMutation = useAddNote();
-   const editMutation = useEditNote(queryClient, setCurrentNote);
+   const editMutation = useEditNote(queryClient, currentNote._id, setCurrentNote);
    const deleteMutation = useDeleteNote(currentNote._id, setCurrentNote);
    
    const [value, setValue] = useState(currentNote.body);
-   const textAreaRef = useRef<HTMLTextAreaElement>(null);
+   const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
 
    useLayoutEffect(()=>{
     if(textAreaRef.current){
@@ -52,7 +52,7 @@ export default function NoteForm({currentNote, setCurrentNote, isForm, setIsForm
             }
         }
     );
-    const { ref, ...rest } = register('body',{onChange: (evt: React.ChangeEvent<HTMLTextAreaElement>)=>{handleChange(evt)}});
+    const { ref, onChange, ...rest } = register('body');
 
     interface FormData{
         title : string;
@@ -61,14 +61,14 @@ export default function NoteForm({currentNote, setCurrentNote, isForm, setIsForm
 
     function onSubmit(data: FormData){
 
-        console.log(data)
+        console.log(data);
 
         // try{
         //     if(isForm.add){
-        //         addMutation.mutate({data,user});
+        //         addMutation.mutate({data, user});
         //     }
         //     else if(isForm.edit){
-        //         editMutation.mutate({data, noteId, user});
+        //         editMutation.mutate({data, user});
         //     }
         //     else{
         //         deleteMutation.mutate();
@@ -99,6 +99,7 @@ export default function NoteForm({currentNote, setCurrentNote, isForm, setIsForm
         if(isForm.delete){
             return (
             <>
+                <label>Are you sure you want to delete this note?</label>
                 <input className="mb-2 p-2 border rounded-xl text-white bg-gradient-to-r from-sky-500 to-indigo-500" type="submit"/>
             </>
             )
@@ -108,9 +109,16 @@ export default function NoteForm({currentNote, setCurrentNote, isForm, setIsForm
                 <>
                     <textarea
                         className="pattern content focus:outline-none"
-                        ref={textAreaRef}
+                        ref={(e)=>{
+                            ref(e);
+                            textAreaRef.current = e;
+                        }}
                         rows={1}
                         value={value}
+                        onChange={e=>{ 
+                            onChange(e);
+                            handleChange(e)
+                        }}
                         {...rest}
                     />
                     <p className="text-red-600 italic font-thin text-sm">{errors.body?.message?.toString()}</p>
