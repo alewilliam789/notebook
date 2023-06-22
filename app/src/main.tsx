@@ -8,7 +8,6 @@ import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persist
 import App from './App.tsx';
 import Login from './pages/Login.tsx';
 import Signup from './pages/Signup.tsx';
-import { NotesProvider } from './context/NotesContext.tsx';
 import ProtectedRoute from './routes/ProtectedRoute.tsx';
 import { UserProvider } from './context/UserContext.tsx';
 
@@ -50,7 +49,6 @@ const persister = createSyncStoragePersister({
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-      <NotesProvider>
         <UserProvider>
           <PersistQueryClientProvider 
           client={queryClient}
@@ -58,6 +56,5 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
             <RouterProvider router={router} />
           </PersistQueryClientProvider>
         </UserProvider>
-      </NotesProvider>
   </React.StrictMode>,
 )

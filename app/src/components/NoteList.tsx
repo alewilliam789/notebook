@@ -4,10 +4,12 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import { useNotes } from '../hooks/customHooks';
 import { useUserContext } from '../context/UserContext';
+import { MutationProvider} from '../context/MutationContext';
 
 import addLogo from '../images/add.png'
 
 import Note from './Note';
+import { NoteData } from './Note';
 import ActionButton from './ActionButton';
 
 
@@ -26,44 +28,55 @@ export default function NoteList(){
 
 
 
-    const { data } = useNotes(user);
+    const {data} = useNotes(user);
     const queryClient = useQueryClient();
 
 
+    function isUndefined(data : NoteData[] | undefined){
+        if(typeof data != 'undefined'){
+            return data
+        }
+        return []
+    }
 
+    function BaseNoteList() {
 
-    if(typeof data != 'undefined'){
-        const noteList = data.map((note) =>{
+        const definedData = isUndefined(data)
+
+        const noteList = definedData.map((note) =>{
             queryClient.setQueryData(['note', {id : note._id}], note)
             return (
-            <Fragment key={note._id}>
-                    <Note note={note} />
-            </Fragment>)
-        })
-
-        if(isAdd){
-            return(
-                <Note note={{title: "", body: ""}} isAdd={isAdd} setIsAdd={setIsAdd} />
+                <MutationProvider key={note._id} isAdd={isAdd} setIsAdd={setIsAdd}>
+                <Fragment>
+                        <Note note={note} />
+                </Fragment>
+                </MutationProvider>
+                
             )
-        }
-
+        })
 
         return (
             <div className='flex flex-col gap-6'>
-            <div className='self-end'>
-                <ActionButton action={'add'} setIsAdd={setIsAdd} icon={<img className="self-center" src={addLogo} alt="Add" />} />
-            </div>
+                <div className='self-end'>
+                    <ActionButton handleClick={()=>{setIsAdd(true)}} icon={<img className="self-center" src={addLogo} alt="Edit" />}/>
+                </div>
                 {noteList}
-            </div>
-        ) 
-    }
-    else {
-        return (
-            <div>
-                Loading
             </div>
         )
     }
 
+            
 
+
+    if(isAdd){
+        return (
+            <>
+            <MutationProvider isAdd={isAdd} setIsAdd={setIsAdd}>
+                <Note note={{title: "", body: ""}} />
+            </MutationProvider>
+            </>
+        ) 
+    }
+
+    return <BaseNoteList />
 }

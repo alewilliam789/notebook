@@ -1,8 +1,12 @@
-import ActionButton from "./components/ActionButton";
+import { useNavigate } from "react-router-dom";
+
+import MutationButton from "./components/ActionButton";
 import NoteList from "./components/NoteList";
 
 
 export default function App(): React.JSX.Element {
+
+  const navigate = useNavigate()
 
 
   return (
@@ -10,7 +14,10 @@ export default function App(): React.JSX.Element {
     <section className="flex gap-10">
       <main className="w-screen h-screen bg-gray-800 flex flex-col gap-6">
         <div className="self-end bg-white">
-          <ActionButton action={"logout"} icon={"Logout"} />
+          <MutationButton  handleClick={()=>{
+            localStorage.clear()
+            navigate('/')
+          }} icon={"Logout"} />
         </div>
         <div className="px-24 w-screen self-center overflow-auto">
           <NoteList />

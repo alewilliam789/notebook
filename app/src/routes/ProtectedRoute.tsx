@@ -17,7 +17,7 @@ export default function  ProtectedRoute({ children }: { children: JSX.Element })
         if(!user){
            navigate('/')
     }
-},[])
+},[user])
 
    return children
 

@@ -59,8 +59,7 @@ export function useAddNote(queryClient : QueryClient){
                     mutationFn: ({data, user} : Mutate) =>{
                         return addNote(data,user)
                     },
-                    onSuccess: (data : NoteData)=>{
-                        queryClient.setQueryData(['note', {id : data._id}], data);
+                    onSuccess: ()=>{
                         queryClient.refetchQueries();
 
                     },
@@ -92,7 +91,6 @@ export function useEditNote(queryClient : QueryClient, _id : string, setCurrentN
                         return editNote(data,_id, user)
                     },
                     onSuccess : (data) =>{
-                        localStorage.setItem('note', JSON.stringify(data))
                         queryClient.setQueryData(['note',{id : data._id}],data)
                     },
                     onError: (e: Error) =>{
@@ -101,21 +99,14 @@ export function useEditNote(queryClient : QueryClient, _id : string, setCurrentN
                 })
 }
 
-export function useDeleteNote(_id: string, queryClient :QueryClient, setCurrentNote : React.Dispatch<React.SetStateAction<NoteData>>){
+export function useDeleteNote(_id: string, queryClient :QueryClient){
         return useMutation({
                 mutationFn : () => {
-                        setCurrentNote((prevNote)=>{
-                                return {
-                                        ...prevNote,
-                                        "title" : "",
-                                        "body" : ""
-                                }
-                        })
+                        queryClient.resetQueries();
                     return deleteNote(_id)
                 },
                 onSuccess: () =>{
-                        localStorage.setItem('note',JSON.stringify({title : "", body: ""}))
-                        queryClient.refetchQueries({ type: 'active' });
+                        queryClient.refetchQueries();
                 },
                 onError: (e: Error) =>{
                         throw new Error(e.message.toString())

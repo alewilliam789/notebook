@@ -2,17 +2,15 @@ import { useForm } from "react-hook-form";
 import { useQueryClient} from "@tanstack/react-query";
 
 import { useUserContext } from "../context/UserContext";
+import { useMutationContext } from "../context/MutationContext";
 import { useAddNote, useEditNote, useDeleteNote } from "../hooks/customHooks";
 import { useState, useRef, useLayoutEffect } from "react";
-import { FormBooleans, NoteData } from "./Note";
+import { NoteData } from "./Note";
 
 
 interface NoteFormProps {
     currentNote : NoteData;
     setCurrentNote : React.Dispatch<React.SetStateAction<NoteData>>;
-    isForm : FormBooleans;
-    setIsForm : React.Dispatch<React.SetStateAction<FormBooleans>>;
-
 }
 
 interface FormData{
@@ -21,16 +19,19 @@ interface FormData{
 }
 
 
-export default function NoteForm({currentNote, setCurrentNote, isForm, setIsForm} : NoteFormProps){
+export default function NoteForm({currentNote, setCurrentNote} : NoteFormProps){
+    
 
     
     const {user} = useUserContext();
+
+    const {state, dispatch} = useMutationContext()
 
     const queryClient = useQueryClient();
 
     const addMutation = useAddNote(queryClient);
     const editMutation = useEditNote(queryClient, currentNote._id ? currentNote._id : "randokey", setCurrentNote);
-    const deleteMutation = useDeleteNote(currentNote._id ?  currentNote._id : "randokey", queryClient, setCurrentNote);
+    const deleteMutation = useDeleteNote(currentNote._id ?  currentNote._id : "randokey", queryClient);
 
     const [value, setValue] = useState(currentNote.body);
     const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
@@ -58,16 +59,17 @@ export default function NoteForm({currentNote, setCurrentNote, isForm, setIsForm
             }
         }
     );
+
     const { ref, onChange, ...rest } = register('body');
 
     
     function onSubmit(data: FormData){
 
         try{
-            if(isForm.add){
+            if(state.add){
                 addMutation.mutate({data, user});
             }
-            else if(isForm.edit){
+            else if(state.edit){
                 editMutation.mutate({data, user});
             }
             else{
@@ -83,20 +85,13 @@ export default function NoteForm({currentNote, setCurrentNote, isForm, setIsForm
            }
         }
         finally{
-            setIsForm((prevState)=>{
-                return {
-                    ...prevState,
-                    edit : false,
-                    delete : false,
-                    add : false
-                }
-            })
+            dispatch({type:"all"})
         }
     }
     
 
     function formText(){
-        if(isForm.delete){
+        if(state.delete){
             return (
             <>
                 <label className="mb-16 font-bold text-center text-2xl">Are you sure you want to delete this note?</label>
@@ -138,7 +133,7 @@ export default function NoteForm({currentNote, setCurrentNote, isForm, setIsForm
         <form id="user" className="h-max p-6 grid gap-5" onSubmit={handleSubmit(onSubmit)}>
                 <div className="flex flex-col gap-10">
                     <button type="button" className="self-end font-bold" onClick={()=>{
-                        setIsForm((prevState)=>{return {...prevState, edit : false, delete: false, add: false}});
+                        dispatch({type:"all"})
                         }}>X</button>
                 </div>
                 {formText()}

@@ -5,6 +5,8 @@ import { useCollapse } from "react-collapsed"
 import ActionButton from "./ActionButton"
 import NoteForm from './NoteForm'
 
+import { useMutationContext } from '../context/MutationContext';
+
 
 import editLogo from '../images/edit.png'
 import deleteLogo from '../images/delete.png'
@@ -18,71 +20,54 @@ export interface NoteData  {
     userName?: string;
 }
 
-export interface FormBooleans {
-    edit : boolean,
-    delete: boolean,
-    add : boolean
-}
-
 interface NoteProps {
-    note: NoteData,
-    isAdd?: boolean,
-    setIsAdd? : React.Dispatch<React.SetStateAction<boolean>>
+    note: NoteData
 
 }
 
 
-export default function Note({note, isAdd, setIsAdd}: NoteProps) {
+export default function Note({note}: NoteProps) {
 
 
 
     const [currentNote, setCurrentNote] = useState<NoteData>(note);
 
-    const [isForm, setIsForm] = useState<FormBooleans>({"edit" :false, "delete": false,"add":isAdd ? isAdd : false});
+    const {state, dispatch} = useMutationContext()
 
     const [isExpanded, setExpanded] =useState(false);
 
-    const { getCollapseProps, getToggleProps} = useCollapse({defaultExpanded : isAdd ? true : false})
+    const { getCollapseProps, getToggleProps} = useCollapse({defaultExpanded : state.add ? true : false})
 
 
 
     useEffect(()=>{
         if(isExpanded == false){
-            setIsForm((prevState)=>{
-                return {
-                    ...prevState,
-                    edit: false,
-                    delete : false
-                }
-            })
+            dispatch({type:"edit"});
         }
-        if((isAdd != isForm.add) && setIsAdd){
-            setIsAdd((prevState)=>{
-                return !prevState
-            })
-        }
-    },[isExpanded, isForm.add])
+    },[isExpanded])
+
+    function handleclick(){
+    setExpanded((prevExpanded)=> !prevExpanded)
+    }
 
     return(
         <>
         <div className="w-full bg-yellow-200 rounded-sm">
-        <button className="px-8 pt-3 pb-3 w-full rounded-sm text-center text-xl" {...getToggleProps(
-            {
-                onClick: () => setExpanded((prevExpanded)=> !prevExpanded),
-            }
-        )}>{isForm.edit && isExpanded ? null : currentNote.title}</button>
+        <button className="px-8 pt-3 pb-3 w-full rounded-sm text-center text-xl" {...getToggleProps({onClick: handleclick})}>
+            {state.edit && isExpanded ? null : currentNote.title}
+        </button>
         <div className="flex justify-center content-center" {...getCollapseProps()}>
                 <section className="w-full rounded-sm">
                         <div className="p-8 flex justify-end gap-6 ">
-                            { isAdd ? null : 
+                            { state.add ? null : 
                             <>
-                                <ActionButton  action={"edit"} setIsForm={setIsForm} icon={<img className="self-center" src={editLogo} alt="Edit" />} />
-                                <ActionButton  action={"delete"} setIsForm={setIsForm} icon={<img className= "self-center" src={deleteLogo} alt="Delete" />} />
+                                <ActionButton handleClick={()=>{dispatch({type:"edit"})}} icon={<img className="self-center" src={editLogo} alt="Edit" />} />
+                                <ActionButton handleClick={()=>{dispatch({type:"delete"})}} icon={<img className= "self-center" src={deleteLogo} alt="Delete" />} />
                             </>
                                 }
                         </div>
-                    { (isForm.edit || isForm.delete || isForm.add) ? 
-                         <NoteForm {...{isForm,setIsForm, currentNote, setCurrentNote}}/>
+                    { (state.edit || state.delete || state.add) ? 
+                         <NoteForm {...{currentNote, setCurrentNote}}/>
                         :
                         <div className="pattern content">
                             {currentNote.body}
