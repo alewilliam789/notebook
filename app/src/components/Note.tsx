@@ -42,7 +42,7 @@ export default function Note({note}: NoteProps) {
 
     useEffect(()=>{
         if(isExpanded == false){
-            dispatch({type:"edit"});
+            dispatch({type:"all"});
         }
     },[isExpanded])
 
