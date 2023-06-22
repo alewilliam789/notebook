@@ -42,12 +42,38 @@ export default function Note({note}: NoteProps) {
 
     useEffect(()=>{
         if(isExpanded == false){
-            dispatch({type:"all"});
+            dispatch({type:"collapsed"})
         }
     },[isExpanded])
 
     function handleclick(){
-    setExpanded((prevExpanded)=> !prevExpanded)
+        setExpanded((prevExpanded)=> !prevExpanded)
+    }
+
+    function IsAdding(){
+        if(state.add){
+            return null
+        }
+        return (
+            <>
+            <ActionButton handleClick={()=>{dispatch({type:"edit"})}} icon={<img className="self-center" src={editLogo} alt="Edit" />} />
+            <ActionButton handleClick={()=>{dispatch({type:"delete"})}} icon={<img className= "self-center" src={deleteLogo} alt="Delete" />} />
+        </>  
+        )
+    }
+
+    function IsForm(){
+        if(state.add || state.edit || state.delete){
+            return (
+            <>
+                <NoteForm {...{currentNote, setCurrentNote}}/>
+            </>)
+        }
+        return (
+            <div className="pattern content">
+                {currentNote.body}
+            </div>
+        )
     }
 
     return(
@@ -59,21 +85,9 @@ export default function Note({note}: NoteProps) {
         <div className="flex justify-center content-center" {...getCollapseProps()}>
                 <section className="w-full rounded-sm">
                         <div className="p-8 flex justify-end gap-6 ">
-                            { state.add ? null : 
-                            <>
-                                <ActionButton handleClick={()=>{dispatch({type:"edit"})}} icon={<img className="self-center" src={editLogo} alt="Edit" />} />
-                                <ActionButton handleClick={()=>{dispatch({type:"delete"})}} icon={<img className= "self-center" src={deleteLogo} alt="Delete" />} />
-                            </>
-                                }
+                            <IsAdding />
                         </div>
-                    { (state.edit || state.delete || state.add) ? 
-                         <NoteForm {...{currentNote, setCurrentNote}}/>
-                        :
-                        <div className="pattern content">
-                            {currentNote.body}
-                        </div>
-                    }
-                    
+                    <IsForm />
                 </section>
         </div>
         </div>

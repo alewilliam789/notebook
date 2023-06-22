@@ -1,6 +1,6 @@
 import { FormBooleans } from "../context/MutationContext";
 
-export type MutationType = "add" | "edit" | "delete" | "logout" | "all";
+export type MutationType = "add" | "edit" | "delete" | "collapsed" | "all";
 
 
 export interface MutationAction{
@@ -11,7 +11,7 @@ export interface MutationAction{
 
 export default function mutationReducer(state: FormBooleans, action : MutationAction ){
 
-    const {type } = action;
+    const { type } = action;
 
     if(type == 'add'){
         return {
@@ -23,6 +23,13 @@ export default function mutationReducer(state: FormBooleans, action : MutationAc
         return {
             ...state,
             "edit" : !state.edit
+        }
+    }
+    else if(type == 'collapsed'){
+        return {
+            ...state,
+            "edit" : false,
+            "delete": false
         }
     }
     else if(type == 'all'){
