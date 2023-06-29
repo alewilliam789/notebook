@@ -20,5 +20,6 @@
     font-size: 19px;
     letter-spacing: 1px;
     word-spacing: 8px;
+    white-space: pre-wrap;
   }
 }
