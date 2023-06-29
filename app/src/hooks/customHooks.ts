@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useQuery, useMutation, QueryClient} from "@tanstack/react-query";
 
-import { NoteData } from "../components/Note";
+import { NoteData, FormData } from "../interfaces/universalTypes";
 import { fetchNote, fetchNotes, addNote, editNote, deleteNote } from "../FetchAPI";
 
 
@@ -39,14 +39,6 @@ export function useCachedNote(){
 }
 
 
-interface FormData {
-        title : string;
-        body : string;
-}
-
-
-
-
 
 interface Mutate {
         data : FormData,
@@ -68,14 +60,6 @@ export function useAddNote(queryClient : QueryClient){
                     }
                 }
                 )         
-}
-
-
-
-
-interface Mutate {
-        data : FormData,
-        user : string
 }
 
 export function useEditNote(queryClient : QueryClient, _id : string, setCurrentNote : React.Dispatch<React.SetStateAction<NoteData>>){

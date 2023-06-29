@@ -1,44 +1,48 @@
 import { useForm } from "react-hook-form";
 import { useQueryClient} from "@tanstack/react-query";
 
+
 import { useUserContext } from "../context/UserContext";
-import { useMutationContext } from "../context/MutationContext";
+import { useFormContext } from "../context/FormContext";
+
 import { useAddNote, useEditNote, useDeleteNote } from "../hooks/customHooks";
-import { useState, useRef, useLayoutEffect } from "react";
-import { NoteData } from "./Note";
+
 import AdaptableTextArea from "./AdaptableTextArea";
+import MutationInput from "./MutationInput";
+import SubmitButton from "./SubmitButton";
+import { useNoteContext } from "../context/NoteContext";
+
+import { FormData } from "../interfaces/universalTypes";
+import ErrorText from "./ErrorText";
 
 
 interface NoteFormProps {
-    currentNote : NoteData;
-    setCurrentNote : React.Dispatch<React.SetStateAction<NoteData>>;
-}
-
-interface FormData{
-    title : string;
-    body : string;
+    setHidden : React.Dispatch<React.SetStateAction<string>>
 }
 
 
-export default function NoteForm({currentNote, setCurrentNote} : NoteFormProps){
+export default function NoteForm({setHidden}: NoteFormProps){
+
+    const {currentNote, setCurrentNote} = useNoteContext()
     
 
     
     const {user} = useUserContext();
 
-    const {state, dispatch} = useMutationContext()
+    const {state, dispatch} = useFormContext()
 
     const queryClient = useQueryClient();
 
     const addMutation = useAddNote(queryClient);
-    const editMutation = useEditNote(queryClient, currentNote._id ? currentNote._id : "randokey", setCurrentNote);
-    const deleteMutation = useDeleteNote(currentNote._id ?  currentNote._id : "randokey", queryClient);
+    const editMutation = useEditNote(queryClient, currentNote._id, setCurrentNote);
+    const deleteMutation = useDeleteNote(currentNote._id, queryClient);
 
+    
     const {register, handleSubmit, formState: {errors}} = useForm(
         {
-            defaultValues: {
-                title : `${currentNote.title}`,
-                body : `${currentNote.body}`
+            defaultValues :{
+                title: currentNote.title,
+                body: currentNote.body
             }
         }
     );
@@ -54,6 +58,7 @@ export default function NoteForm({currentNote, setCurrentNote} : NoteFormProps){
                 editMutation.mutate({data, user});
             }
             else{
+                setHidden("hidden");
                 deleteMutation.mutate();
             }
         }
@@ -71,23 +76,21 @@ export default function NoteForm({currentNote, setCurrentNote} : NoteFormProps){
     }
     
 
-    function formText(){
+    function FormText(){
         if(state.delete){
             return (
             <>
-                <label className="mb-16 font-bold text-center text-2xl">Are you sure you want to delete this note?</label>
-                <input className="mb-2 p-2 border rounded-xl text-white bg-gradient-to-r from-sky-500 to-indigo-500" type="submit"/>
+                <label className="mb-16 font-bold text-center text-2xl pb-10">Are you sure you want to delete this note?</label>
             </>
             )
         }
         else {
             return (
                 <>
-                    <input className="content bg-yellow-200 text-center focus:outline-none" placeholder="Title" {...register("title", {required: "This field is required", minLength :{value: 4, message: "This title is too short"}})}/>
+                    <MutationInput register={register} name="title" />
+                    <ErrorText errorMessage={errors.title?.message?.toString()} />
                     <AdaptableTextArea body={currentNote.body} register={register}/>
-                    <p className="text-red-600 italic font-thin text-sm">{errors.body?.message?.toString()}</p>
-                    <p className="text-red-600 italic font-thin text-sm">{``}</p>
-                    <input className="mb-2 p-2 border rounded-xl text-white bg-gradient-to-r from-sky-500 to-indigo-500" type="submit" />
+                    <ErrorText errorMessage={errors.body?.message?.toString()} />
                 </>
             )
         }
@@ -103,7 +106,8 @@ export default function NoteForm({currentNote, setCurrentNote} : NoteFormProps){
                         dispatch({type:"all"})
                         }}>X</button>
                 </div>
-                {formText()}
+                <FormText />
+                <SubmitButton />
         </form>
         </>
     )

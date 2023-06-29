@@ -1,6 +1,7 @@
 import { useState } from "react";
 import {useForm} from "react-hook-form";
 import { Link, useNavigate} from "react-router-dom";
+import ErrorText from "../components/ErrorText";
 
 
 export default function Login(){
@@ -20,16 +21,16 @@ export default function Login(){
         }}
     );
 
-        function handleUserVerification() : string | undefined{
-            if(!userVerification.isCorrectPassword){
-                return "Sorry that is an incorrect password"
-            }
-            else if(!userVerification.doesExist){
-                return "Sorry we could not find this user"
-            }
-
-            return (errors.password?.message?.toString())
+    function handleUserVerification() : string | undefined{
+        if(!userVerification.isCorrectPassword){
+            return "Sorry that is an incorrect password"
         }
+        else if(!userVerification.doesExist){
+            return "Sorry we could not find this user"
+        }
+
+        return (errors.password?.message?.toString())
+    }
 
 
 
@@ -73,7 +74,7 @@ export default function Login(){
     <form id="user" className="p-10 grid gap-5" onSubmit={handleSubmit(onSubmit)}>
             <label className="mb-10 text-center text-2xl"> Welcome</label>
             <input className="border-b-2 border-gray-300 font-mono focus:outline-none" placeholder="Username" {...register("userName", {required: "This field is required"})}/>
-            <p className="text-red-600 italic font-thin text-sm">{errors.userName?.message?.toString()}</p>
+            <ErrorText errorMessage={errors.userName?.message?.toString()}/>
             
             <input className="border-b-2 border-gray-300 font-mono focus:outline-none" placeholder="Password" type="password" {...register("password", {required: "This field is required"})} />
             <p className="text-red-600 italic font-thin text-sm">{handleUserVerification()}</p>

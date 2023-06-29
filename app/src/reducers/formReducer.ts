@@ -1,4 +1,4 @@
-import { FormBooleans } from "../context/MutationContext";
+import { FormBooleans } from "../context/FormContext";
 
 export type MutationType = "add" | "edit" | "delete" | "collapsed" | "all";
 
@@ -9,7 +9,7 @@ export interface MutationAction{
 }
 
 
-export default function mutationReducer(state: FormBooleans, action : MutationAction ){
+export default function formReducer(state: FormBooleans, action : MutationAction ){
 
     const { type } = action;
 

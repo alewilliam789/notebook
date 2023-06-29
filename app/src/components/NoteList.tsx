@@ -1,17 +1,19 @@
-import {  Fragment, useState } from 'react';
+import { useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 
 
 import { useNotes } from '../hooks/customHooks';
 import { useUserContext } from '../context/UserContext';
-import { MutationProvider} from '../context/MutationContext';
+import { NoteProvider } from '../context/NoteContext';
+import { FormProvider} from '../context/FormContext';
 
 import addLogo from '../images/add.png'
 
-import Note from './Note';
-import { NoteData } from './Note';
+
 import ActionButton from './ActionButton';
 
+import { NoteData } from '../interfaces/universalTypes';
+import NotePanel from './NotePanel';
 
 
 
@@ -43,14 +45,28 @@ export default function NoteList(){
 
         const definedData = isUndefined(data)
 
+
+        if(isAdd){
+            return (
+                <>
+                <FormProvider isAdd={isAdd} setIsAdd={setIsAdd}>
+                    <NoteProvider passedNote={{_id: "", title: "", body: ""}}>
+                        <NotePanel />
+                    </NoteProvider>
+                </FormProvider>
+                </>
+            ) 
+        }
+
+
         const noteList = definedData.map((note) =>{
             queryClient.setQueryData(['note', {id : note._id}], note)
             return (
-                <MutationProvider key={note._id} isAdd={isAdd} setIsAdd={setIsAdd}>
-                <Fragment>
-                        <Note note={note} />
-                </Fragment>
-                </MutationProvider>
+                <FormProvider key={note._id} isAdd={isAdd} setIsAdd={setIsAdd}>
+                    <NoteProvider passedNote={note}>
+                        <NotePanel />
+                    </NoteProvider>
+                </FormProvider>
                 
             )
         })
@@ -63,19 +79,6 @@ export default function NoteList(){
                 {noteList}
             </div>
         )
-    }
-
-            
-
-
-    if(isAdd){
-        return (
-            <>
-            <MutationProvider isAdd={isAdd} setIsAdd={setIsAdd}>
-                <Note note={{title: "", body: ""}} />
-            </MutationProvider>
-            </>
-        ) 
     }
 
     return <BaseNoteList />
