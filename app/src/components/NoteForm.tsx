@@ -6,6 +6,7 @@ import { useMutationContext } from "../context/MutationContext";
 import { useAddNote, useEditNote, useDeleteNote } from "../hooks/customHooks";
 import { useState, useRef, useLayoutEffect } from "react";
 import { NoteData } from "./Note";
+import AdaptableTextArea from "./AdaptableTextArea";
 
 
 interface NoteFormProps {
@@ -33,24 +34,6 @@ export default function NoteForm({currentNote, setCurrentNote} : NoteFormProps){
     const editMutation = useEditNote(queryClient, currentNote._id ? currentNote._id : "randokey", setCurrentNote);
     const deleteMutation = useDeleteNote(currentNote._id ?  currentNote._id : "randokey", queryClient);
 
-    const [value, setValue] = useState(currentNote.body);
-    const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
-
-    useLayoutEffect(()=>{
-    if(textAreaRef.current){
-        textAreaRef.current.style.height = "0";
-        const scrollHeight = textAreaRef.current.scrollHeight;
-
-        textAreaRef.current.style.height = scrollHeight + "px";
-    }
-    },[textAreaRef, value]);
-
-    const handleChange = (evt: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const val = evt.target?.value;
-
-    setValue(val);
-    };
-
     const {register, handleSubmit, formState: {errors}} = useForm(
         {
             defaultValues: {
@@ -59,8 +42,6 @@ export default function NoteForm({currentNote, setCurrentNote} : NoteFormProps){
             }
         }
     );
-
-    const { ref, onChange, ...rest } = register('body');
 
     
     function onSubmit(data: FormData){
@@ -103,21 +84,7 @@ export default function NoteForm({currentNote, setCurrentNote} : NoteFormProps){
             return (
                 <>
                     <input className="content bg-yellow-200 text-center focus:outline-none" placeholder="Title" {...register("title", {required: "This field is required", minLength :{value: 4, message: "This title is too short"}})}/>
-                    <textarea
-                        className="pattern content focus:outline-none"
-                        ref={(e)=>{
-                            ref(e);
-                            textAreaRef.current = e;
-                        }}
-                        rows={1}
-                        value={value}
-                        placeholder="Add your journal entry here..."
-                        onChange={e=>{ 
-                            onChange(e);
-                            handleChange(e)
-                        }}
-                        {...rest}
-                    />
+                    <AdaptableTextArea body={currentNote.body} register={register}/>
                     <p className="text-red-600 italic font-thin text-sm">{errors.body?.message?.toString()}</p>
                     <p className="text-red-600 italic font-thin text-sm">{``}</p>
                     <input className="mb-2 p-2 border rounded-xl text-white bg-gradient-to-r from-sky-500 to-indigo-500" type="submit" />
