@@ -16,7 +16,7 @@ export default function App(): React.JSX.Element {
     <section className="flex gap-10">
       <main className="w-screen h-screen bg-gray-800 flex flex-col gap-6">
         <div className="m-6 self-end">
-          <ActionButton action="logout" handleClick={()=>{
+          <ActionButton action="Logout" handleClick={()=>{
             localStorage.clear()
             navigate('/')
           }} icon={<img className="self-center" src={logoutLogo} alt="Logout" />} />

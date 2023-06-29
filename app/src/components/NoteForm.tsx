@@ -95,7 +95,7 @@ export default function NoteForm(){
 
     return (
         <>
-        <form id="user" className="h-max p-6 grid gap-5" onSubmit={handleSubmit(onSubmit)}>
+        <form id="user" className= "h-max p-6 grid gap-5 shadow-bottom" onSubmit={handleSubmit(onSubmit)}>
                 <div className="flex flex-col gap-10">
                     <button type="button" className="self-end font-bold" onClick={()=>{
                         dispatch({type:"all"})
