@@ -5,6 +5,11 @@
 
 @layer base{
     /* styling blue horizontal lines */
+
+.button-shadow {
+  box-shadow: inset 0px -2px 10px rgba(0, 0, 0, 0.3)
+}
+
 .pattern {
     height: max-content;
     background-image: repeating-linear-gradient(rgb(254 240 138) 0px, rgb(254 240 138) 24px, rgb(220 38 38) 25px);
@@ -21,5 +26,6 @@
     letter-spacing: 1px;
     word-spacing: 8px;
     white-space: pre-wrap;
+    box-shadow: inset 0px -10px 10px rgba(0, 0, 0, 0.3)
   }
 }

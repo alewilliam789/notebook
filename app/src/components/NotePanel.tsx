@@ -63,7 +63,7 @@ export default function NotePanel() {
 
     return(
         <>
-        <div className='w-full bg-yellow-200 rounded-sm'>
+        <div className={`w-full bg-yellow-200 rounded-sm ${isExpanded ? 'note-shadow' : ''}`}>
         <button className="px-8 pt-3 pb-3 w-full rounded-sm text-center text-xl" {...getToggleProps({onClick: handleclick})}>
             {state.edit && isExpanded ? null : currentNote.title}
         </button>

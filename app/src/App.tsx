@@ -1,7 +1,9 @@
 import { useNavigate } from "react-router-dom";
 
-import MutationButton from "./components/ActionButton";
+import ActionButton from "./components/ActionButton";
 import NoteList from "./components/NoteList";
+
+import logoutLogo from './images/logout.png';
 
 
 export default function App(): React.JSX.Element {
@@ -13,11 +15,11 @@ export default function App(): React.JSX.Element {
     <>
     <section className="flex gap-10">
       <main className="w-screen h-screen bg-gray-800 flex flex-col gap-6">
-        <div className="self-end bg-white">
-          <MutationButton  handleClick={()=>{
+        <div className="m-6 self-end">
+          <ActionButton action="logout" handleClick={()=>{
             localStorage.clear()
             navigate('/')
-          }} icon={"Logout"} />
+          }} icon={<img className="self-center" src={logoutLogo} alt="Logout" />} />
         </div>
         <div className="px-24 w-screen self-center overflow-auto">
           <NoteList />
