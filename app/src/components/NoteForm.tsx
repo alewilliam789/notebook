@@ -16,12 +16,8 @@ import { FormData } from "../interfaces/universalTypes";
 import ErrorText from "./ErrorText";
 
 
-interface NoteFormProps {
-    setHidden : React.Dispatch<React.SetStateAction<string>>
-}
 
-
-export default function NoteForm({setHidden}: NoteFormProps){
+export default function NoteForm(){
 
     const {currentNote, setCurrentNote} = useNoteContext()
     
@@ -37,7 +33,7 @@ export default function NoteForm({setHidden}: NoteFormProps){
     const editMutation = useEditNote(queryClient, currentNote._id, setCurrentNote);
     const deleteMutation = useDeleteNote(currentNote._id, queryClient);
 
-    
+
     const {register, handleSubmit, formState: {errors}} = useForm(
         {
             defaultValues :{
@@ -58,7 +54,6 @@ export default function NoteForm({setHidden}: NoteFormProps){
                 editMutation.mutate({data, user});
             }
             else{
-                setHidden("hidden");
                 deleteMutation.mutate();
             }
         }

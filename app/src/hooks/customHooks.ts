@@ -83,14 +83,13 @@ export function useEditNote(queryClient : QueryClient, _id : string, setCurrentN
                 })
 }
 
-export function useDeleteNote(_id: string, queryClient :QueryClient){
+export function useDeleteNote(_id: string, queryClient : QueryClient){
         return useMutation({
                 mutationFn : () => {
-                        queryClient.resetQueries();
                     return deleteNote(_id)
                 },
-                onSuccess: () =>{
-                        queryClient.refetchQueries();
+                onSuccess : () =>{
+                        queryClient.refetchQueries()
                 },
                 onError: (e: Error) =>{
                         throw new Error(e.message.toString())

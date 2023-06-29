@@ -31,7 +31,7 @@ export default function NotePanel() {
 
     const [isExpanded, setExpanded] = useState<boolean>(false);
     
-    const [isHidden, setHidden] = useState<string>("");
+
 
     const { getCollapseProps, getToggleProps} = useCollapse({defaultExpanded : state.add ? true : false})
 
@@ -51,7 +51,7 @@ export default function NotePanel() {
         if(state.add || state.edit || state.delete){
             return (
             <>
-                <NoteForm setHidden={setHidden}/>
+                <NoteForm />
             </>)
         }
         return (
@@ -63,9 +63,9 @@ export default function NotePanel() {
 
     return(
         <>
-        <div className={"w-full bg-yellow-200 rounded-sm" + isHidden}>
+        <div className='w-full bg-yellow-200 rounded-sm'>
         <button className="px-8 pt-3 pb-3 w-full rounded-sm text-center text-xl" {...getToggleProps({onClick: handleclick})}>
-            {isExpanded ? null : currentNote.title}
+            {state.edit && isExpanded ? null : currentNote.title}
         </button>
         <div className="flex justify-center content-center" {...getCollapseProps()}>
                 <section className="w-full rounded-sm">
