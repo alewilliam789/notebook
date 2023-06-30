@@ -26,20 +26,34 @@
   animation: gradient 20s ease infinite;
 }
 
+.bg-day-button {
+  background: linear-gradient(0deg, #F5E1A2, #FAB972);
+  background-size: 100% 100%;
+}
+
 .bg-night {
   background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
   background-size: 400% 400%;
   animation: gradient 15s ease;
 }
 
-.scrollbar-hide::-webkit-scrollbar {
-  display: none;
+::-webkit-scrollbar {
+  width: 10px;
 }
 
-/* For IE, Edge and Firefox */
-.scrollbar-hide {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+/* Track */
+::-webkit-scrollbar-track {
+  background: #FECACA; 
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #FCA5A5; 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #F87171; 
 }
 
 @keyframes gradient {
