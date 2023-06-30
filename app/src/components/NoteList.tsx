@@ -1,4 +1,4 @@
-import { Fragment, useState } from 'react';
+import { useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { ThreeDots } from 'react-loader-spinner';
 
@@ -21,8 +21,6 @@ import NotePanel from './NotePanel';
 
 
 
-
-
 export default function NoteList(){
 
     const {user} = useUserContext();
@@ -33,7 +31,6 @@ export default function NoteList(){
 
     const {data, isFetching, isLoading} = useNotes(user);
     const queryClient = useQueryClient();
-
 
 
 
