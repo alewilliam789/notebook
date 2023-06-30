@@ -12,7 +12,7 @@ import MutationInput from "./MutationInput";
 import SubmitButton from "./SubmitButton";
 import { useNoteContext } from "../context/NoteContext";
 
-import { FormData } from "../interfaces/universalTypes";
+import { FormData } from "../type";
 import ErrorText from "./ErrorText";
 
 

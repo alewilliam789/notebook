@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useQuery, useMutation, QueryClient} from "@tanstack/react-query";
 
-import { NoteData, FormData } from "../interfaces/universalTypes";
+import { NoteData, FormData } from "../type";
 import { fetchNote, fetchNotes, addNote, editNote, deleteNote } from "../FetchAPI";
 
 
@@ -17,6 +17,8 @@ export function useNotes(user : string) {
 }
 
 type cachedReturn = [NoteData, React.Dispatch<React.SetStateAction<NoteData>>];
+
+
 
 
 

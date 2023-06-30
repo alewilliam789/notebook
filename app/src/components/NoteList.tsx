@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 
 
@@ -12,7 +12,7 @@ import addLogo from '../images/add.png'
 
 import ActionButton from './ActionButton';
 
-import { NoteData } from '../interfaces/universalTypes';
+import { NoteData } from '../type';
 import NotePanel from './NotePanel';
 
 
@@ -30,8 +30,13 @@ export default function NoteList(){
 
 
 
-    const {data} = useNotes(user);
+    const {data, isFetching, isLoading} = useNotes(user);
     const queryClient = useQueryClient();
+
+    const [showLoader, setShowLoader] = useState<boolean>(false)
+
+
+
 
 
     function isUndefined(data : NoteData[] | undefined){
@@ -56,6 +61,9 @@ export default function NoteList(){
                 </FormProvider>
                 </>
             ) 
+        }
+        else if(isFetching || isLoading){
+
         }
 
 

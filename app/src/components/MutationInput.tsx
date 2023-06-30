@@ -1,6 +1,6 @@
 import { UseFormRegister } from "react-hook-form";
 
-import { fieldTitle } from "../interfaces/universalTypes";
+import { fieldTitle } from "../type";
 
 interface ImportProps {
     name : fieldTitle,

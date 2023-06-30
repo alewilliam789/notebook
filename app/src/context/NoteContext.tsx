@@ -1,5 +1,5 @@
 import {ReactNode, createContext, useContext, useState} from "react";
-import { NoteData } from "../interfaces/universalTypes";
+import { NoteData } from "../type";
 
 
 interface NoteContextProps {
