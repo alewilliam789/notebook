@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react';
+import { Fragment, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
+import { ThreeDots } from 'react-loader-spinner';
 
 
 import { useNotes } from '../hooks/customHooks';
@@ -33,8 +34,6 @@ export default function NoteList(){
     const {data, isFetching, isLoading} = useNotes(user);
     const queryClient = useQueryClient();
 
-    const [showLoader, setShowLoader] = useState<boolean>(false)
-
 
 
 
@@ -63,7 +62,13 @@ export default function NoteList(){
             ) 
         }
         else if(isFetching || isLoading){
-
+            return (
+                <div className='pt-32 flex justify-center'>
+                    <ThreeDots 
+                      color= 'rgb(253, 230, 138)' 
+                    />
+                </div>
+            )
         }
 
 
