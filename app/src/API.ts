@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { NoteData } from "./context/NotesContext";
+import { NoteData } from './type'
 
 
 interface FormData {

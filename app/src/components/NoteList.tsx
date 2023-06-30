@@ -8,7 +8,7 @@ import { useUserContext } from '../context/UserContext';
 import { NoteProvider } from '../context/NoteContext';
 import { FormProvider} from '../context/FormContext';
 
-import addLogo from '../images/add.png'
+import addLogo from '../assets/icons/add.png';
 
 
 import ActionButton from './ActionButton';
@@ -62,7 +62,7 @@ export default function NoteList(){
             return (
                 <div className='pt-32 flex justify-center'>
                     <ThreeDots 
-                      color= 'rgb(253, 230, 138)' 
+                      color= '#D2686E' 
                     />
                 </div>
             )
@@ -82,8 +82,8 @@ export default function NoteList(){
         })
 
         return (
-            <div className='flex flex-col gap-6'>
-                <div className='self-end'>
+            <div className='p-10 flex flex-col gap-6'>
+                <div className='py-10 self-end'>
                     <ActionButton handleClick={()=>{setIsAdd(true)}} icon={<img className="self-center" src={addLogo} alt="Edit" />}/>
                 </div>
                 {noteList}

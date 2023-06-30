@@ -10,13 +10,55 @@
   box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
 }
 
-.shadow-bottom {
-  box-shadow: inset 0px -10px 10px rgba(0, 0, 0, 0.3);
+.note-shadow {
+  box-shadow: 10px 10px 10px rgba(0, 0,0,0.3);
 }
+
+.bg-button {
+  background-color: rgb(220 38 38);
+}
+
+
+
+.bg-day {
+  background: linear-gradient(-45deg, #F5E1A2, #FAB972);
+  background-size: 400% 400%;
+  animation: gradient 20s ease infinite;
+}
+
+.bg-night {
+  background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+  background-size: 400% 400%;
+  animation: gradient 15s ease;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* For IE, Edge and Firefox */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+@keyframes gradient {
+  0% {
+      background-position: 0% 0%;
+  }
+  50% {
+      background-position: 100% 100%;
+  }
+  100% {
+    background-position: 0% 0%;
+  }
+}
+
+
 
 .pattern {
     height: max-content;
-    background-image: repeating-linear-gradient(rgb(254 240 138) 0px, rgb(254 240 138) 24px, rgb(220 38 38) 25px);
+    background-image: repeating-linear-gradient(white 0px, white 24px, rgb(220 38 38) 25px);
   }
   
   /* styling text content */
