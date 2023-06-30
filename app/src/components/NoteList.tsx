@@ -62,7 +62,7 @@ export default function NoteList(){
             return (
                 <div className='pt-32 flex justify-center'>
                     <ThreeDots 
-                      color= '#D2686E' 
+                      color= '#EF4444' 
                     />
                 </div>
             )

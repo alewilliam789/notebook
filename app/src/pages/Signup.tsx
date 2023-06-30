@@ -1,6 +1,7 @@
 import { useState } from "react";
 import {useForm} from "react-hook-form";
 import { Link, useNavigate} from "react-router-dom";
+import SubmitButton from "../components/SubmitButton";
 
 export default function Signup(){
 
@@ -79,7 +80,7 @@ export default function Signup(){
 
             <input className="border-b-2 border-gray-300 font-mono focus:outline-none" placeholder="Confirm Password" type="password" {...register("confirmPassword", {required: "This field is required", validate : validatePassword})} />
             <p className="text-red-600 italic font-thin text-sm">{handleUserVerification()}</p>
-            <input className="mb-2 p-2 border rounded-xl text-white bg-gradient-to-r from-sky-500 to-indigo-500" type="submit"/>
+            <SubmitButton />
             <Link className="text-sm text-center" to={"/login"}>Already have an account? Login</Link>
     </form>
     </div>

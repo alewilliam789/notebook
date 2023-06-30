@@ -2,6 +2,7 @@ import { useState } from "react";
 import {useForm} from "react-hook-form";
 import { Link, useNavigate} from "react-router-dom";
 import ErrorText from "../components/ErrorText";
+import SubmitButton from "../components/SubmitButton";
 
 
 export default function Login(){
@@ -78,7 +79,7 @@ export default function Login(){
             
             <input className="border-b-2 border-gray-300 font-mono focus:outline-none" placeholder="Password" type="password" {...register("password", {required: "This field is required"})} />
             <p className="text-red-600 italic font-thin text-sm">{handleUserVerification()}</p>
-            <input className="mb-2 p-2 border rounded-xl text-white bg-gradient-to-r from-sky-500 to-indigo-500" type="submit"/>
+            <SubmitButton />
             <Link className="text-sm text-center" to={"/signup"}>Don't have an account? Sign up!</Link>
     </form>
     </div>
