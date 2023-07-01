@@ -23,9 +23,32 @@
 }
 
 .journal {
-  height: 800px
-
+  height: 800px;
+  overflow: hidden;
 }
+
+.journal::before {
+  content: '';
+  position: relative;
+  background-color: rgb(255, 255,255, 0.3);
+  height: 800px;
+  width: 60px;
+  left: -700px;
+  transform: skewX(-30deg);
+  animation: slide 5s ease-in-out infinite;
+  animation-delay: 1.5s;
+}
+
+@keyframes slide {
+  0% {
+    left: -700px
+  }
+  100% {
+    left: 110%;
+  }
+}
+
+
 
 
 

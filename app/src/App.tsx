@@ -13,7 +13,7 @@ export default function App(): React.JSX.Element {
 
   return (
     <>
-      <main className="pb-40 w-full h-full bg-day flex flex-col align-center gap-6 overflow-auto">
+      <main className="pb-20 w-full h-full bg-day flex flex-col align-center gap-6">
         <div className="m-6 self-end">
           <ActionButton action="Logout" handleClick={()=>{
             localStorage.clear()
