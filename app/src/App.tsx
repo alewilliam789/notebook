@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 
 import ActionButton from "./components/ActionButton";
-import NoteList from "./components/NoteList";
+import Journal from "./components/Journal"
 
 import logoutLogo from './assets/icons/logout.png';
 
@@ -13,19 +13,15 @@ export default function App(): React.JSX.Element {
 
   return (
     <>
-    <section className="flex gap-10">
-      <main className="w-screen h-screen bg-day flex flex-col gap-6">
+      <main className="pb-40 w-full h-full bg-day flex flex-col align-center gap-6 overflow-auto">
         <div className="m-6 self-end">
           <ActionButton action="Logout" handleClick={()=>{
             localStorage.clear()
             navigate('/')
           }} icon={<img className="self-center" src={logoutLogo} alt="Logout" />} />
         </div>
-        <div className="px-24 w-screen self-center overflow-auto scrollbar-hide">
-          <NoteList />
-        </div>
+          <Journal />
       </main>
-    </section>
     </>
   )
 }
