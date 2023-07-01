@@ -2,7 +2,7 @@
 import express, {Request, Response} from 'express';
 import {ObjectId} from 'mongodb';
 import {collections} from '../services/database.service.js';
-import Note from "../models/notes.js";
+import Note from "../models/notes";
 
 
 
@@ -101,7 +101,7 @@ notesRouter.delete("/:noteid", async(req: Request, res: Response) => {
             res.status(202).send(`Successfully removed note with noteId ${noteId}`)
         }
         else if (!result){
-            res.status(400).send(`Failed to remove user with noteId ${noteId}`);
+            res.status(400).send(`Failed to remove note with noteId ${noteId}`);
         }
         else if(!result.deletedCount) {
             res.status(404).send(`User with noteId ${noteId} does not exist`);
