@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
+import {Parallax, IParallax } from '@react-spring/parallax';
 import { ThreeDots } from 'react-loader-spinner';
 
 
@@ -14,14 +15,14 @@ import addLogo from '../assets/icons/add.png';
 import ActionButton from './ActionButton';
 
 import { NoteData } from '../type';
-import NotePanel from './NotePanel';
+import Page from './Page';
 
 
 
 
 
 
-export default function NoteList(){
+export default function NoteParallax(){
 
     const {user} = useUserContext();
 
@@ -42,23 +43,21 @@ export default function NoteList(){
         return []
     }
 
-    function BaseNoteList() {
+    function BaseNoteParallax() {
 
         const definedData = isUndefined(data)
 
+        const parallaxRef = useRef<IParallax>(null)
 
-        if(isAdd){
-            return (
-                <>
-                <FormProvider isAdd={isAdd} setIsAdd={setIsAdd}>
-                    <NoteProvider passedNote={{_id: "", title: "", body: ""}}>
-                        <NotePanel />
-                    </NoteProvider>
-                </FormProvider>
-                </>
-            ) 
+
+        function scrollTo(page :number){
+            if(parallaxRef.current){
+                parallaxRef.current.scrollTo(page);
+            }
         }
-        else if(isFetching || isLoading){
+
+
+        if(isFetching || isLoading){
             return (
                 <div className='pt-32 flex justify-center'>
                     <ThreeDots 
@@ -69,12 +68,12 @@ export default function NoteList(){
         }
 
 
-        const noteList = definedData.map((note) =>{
+        const noteParallaxList = definedData.map((note, index) =>{
             queryClient.setQueryData(['note', {id : note._id}], note)
             return (
                 <FormProvider key={note._id} isAdd={isAdd} setIsAdd={setIsAdd}>
                     <NoteProvider passedNote={note}>
-                        <NotePanel />
+                        <Page offset={index}/>
                     </NoteProvider>
                 </FormProvider>
                 
@@ -84,12 +83,14 @@ export default function NoteList(){
         return (
             <div className='p-10 flex flex-col gap-6'>
                 <div className='py-10 self-end'>
-                    <ActionButton handleClick={()=>{setIsAdd(true)}} icon={<img className="self-center" src={addLogo} alt="Edit" />}/>
+                    {/* <ActionButton handleClick={()=>{setIsAdd(true)}} icon={<img className="self-center" src={addLogo} alt="Edit" />}/> */}
                 </div>
-                {noteList}
+                <Parallax pages={noteParallaxList.length+1} ref={parallaxRef} horizontal>
+                    {noteParallaxList}
+                </Parallax>
             </div>
         )
     }
 
-    return <BaseNoteList />
+    return <BaseNoteParallax />
 }
