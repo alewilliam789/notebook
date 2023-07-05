@@ -51,7 +51,7 @@ export const useFormContext = () => {
     const formContext = useContext(FormContext);
 
     if(!formContext){
-        throw new Error("This hook needs to be used inside a MutationProvider")
+        throw new Error("This hook needs to be used inside a FormProvider")
     }
 
     return formContext

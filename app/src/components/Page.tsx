@@ -12,7 +12,7 @@ export default function Page({ offset, handleClick} : PageProps){
 
     return(
         <>
-        <ParallaxLayer className="pattern content" offset={offset} speed={0.3}>
+        <ParallaxLayer offset={offset} speed={0.3}>
             <NotePanel />
         </ParallaxLayer>
         </>)
