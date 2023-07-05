@@ -4,6 +4,7 @@ import ActionButton from "./components/ActionButton";
 import Journal from "./components/Journal"
 
 import logoutLogo from './assets/icons/logout.png';
+import NoteParallax from "./components/NoteParallax";
 
 
 export default function App(): React.JSX.Element {
@@ -13,7 +14,7 @@ export default function App(): React.JSX.Element {
 
   return (
     <>
-      <main className="pb-20 w-full h-full bg-day flex flex-col align-center gap-6">
+      <main className="pb-20 w-screen h-screen bg-day flex flex-col align-center gap-6">
         <div className="m-6 self-end">
           <ActionButton action="Logout" handleClick={()=>{
             localStorage.clear()

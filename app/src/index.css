@@ -24,12 +24,12 @@
 
 .journal {
   background-color: rgb(4, 59, 92);
-  height: 800px;
-  width: 700px;
+  padding: 20px;
   margin-left: auto;
   margin-right: auto;
   border-radius: 0.75rem;
   overflow: hidden;
+  transition: all 1.0s ease-out;
 }
 
 .journal::before {
@@ -43,9 +43,16 @@
   animation: slide 5s ease-in-out infinite;
   animation-delay: 1.5s;
 }
-.journal-open {
-  height: max-content;
-  width: max-content; 
+
+.closed {
+  height: 800px;
+  width: 700px;
+}
+
+.open {
+  height: 100%;
+  width: 80%;
+  animation: none;
 }
 
 @keyframes slide {
@@ -98,7 +105,9 @@
   
   /* styling text content */
   .content {
-    padding-bottom: 20px;
+    height: 100%;
+    padding-top: 0.5px;
+    padding-bottom: 30px;
     padding-left: 50px;
     padding-right: 50px;
     line-height: 25px;

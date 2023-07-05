@@ -49,12 +49,12 @@ export default function NoteParallax(){
 
         const parallaxRef = useRef<IParallax>(null)
 
-
-        function scrollTo(page :number){
+        function scrollTo(page : number){
             if(parallaxRef.current){
-                parallaxRef.current.scrollTo(page);
+                parallaxRef.current.scrollTo(page)
             }
         }
+
 
 
         if(isFetching || isLoading){
@@ -70,38 +70,34 @@ export default function NoteParallax(){
 
         const noteParallaxList = definedData.map((note, index) =>{
             queryClient.setQueryData(['note', {id : note._id}], note)
+
+            if(index == definedData.length-1){
+                return (
+                    <FormProvider key={note._id} isAdd={isAdd} setIsAdd={setIsAdd}>
+                        <NoteProvider passedNote={note}>
+                            <Page offset={index} handleClick={()=>scrollTo(0)} last={true} />
+                        </NoteProvider>
+                    </FormProvider>
+                    
+                )
+            }
             return (
                 <FormProvider key={note._id} isAdd={isAdd} setIsAdd={setIsAdd}>
                     <NoteProvider passedNote={note}>
-                        <Page offset={index}/>
+                        <Page offset={index} handleClick={()=>scrollTo(index+1)}/>
                     </NoteProvider>
                 </FormProvider>
                 
             )
         })
 
-        noteParallaxList.push(
-
-                <FormProvider key={"blank"} isAdd={isAdd} setIsAdd={setIsAdd}>
-                    <NoteProvider passedNote={{
-                        _id: "blank",
-                        title: "",
-                        body: "",
-                        userName: ""
-                    }}>
-                        <Page offset={noteParallaxList.length+1}/>
-                    </NoteProvider>
-                </FormProvider>
-        )
-
         return (
-            <div className='p-10 flex flex-col gap-6'>
-                <div className='py-10 self-end'>
-                    {/* <ActionButton handleClick={()=>{setIsAdd(true)}} icon={<img className="self-center" src={addLogo} alt="Edit" />}/> */}
+            <div className='p-10 flex flex-col justify-center gap-6'>
+                <div className='relative h-[800px] w-[900px]'>
+                    <Parallax pages={noteParallaxList.length} ref={parallaxRef} horizontal className='binding'>
+                        {noteParallaxList}
+                    </Parallax>
                 </div>
-                <Parallax pages={noteParallaxList.length+1} ref={parallaxRef} horizontal className='binding'>
-                    {noteParallaxList}
-                </Parallax>
             </div>
         )
     }

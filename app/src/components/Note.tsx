@@ -7,8 +7,8 @@ export default function Note(){
 
     return (
         <>
-                <p className="pattern content text-center">{currentNote.title}</p>
-                <p className="pattern content">{currentNote.body}</p>
+                <p className="content text-center text-xl font-bold">{currentNote.title}</p>
+                <p className="content">{currentNote.body}</p>
         </>
     )
 }

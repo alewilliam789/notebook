@@ -8,26 +8,28 @@ export default function Journal(){
 
     const {user} = useUserContext()
 
-    const [open, setOpen] = useState<boolean>(false);
+    const [open, setOpen] = useState<boolean>(true);
 
-    const [openStyles, setOpenStyles] = useState<string>("journal");
+    const [openStyles, setOpenStyles] = useState<string>(" open");
 
 
 
-    function handleClick(){
+    // function handleClick(){
 
-        if(!open){
-            setOpen(true)
-            setOpenStyles("journal-open bg-day")
-        }
-    }
+    //         setOpen((prevState)=>{
+    //             return !prevState
+    //         })
+    //         if(!open){
+    //             setOpenStyles("open")
+    //         }
+    // }
 
     function JournalSwitcher(){
 
         if(open){
             return (
             <>
-                <NoteParallax />
+                    <NoteParallax />
             </>)
         }
         else{
@@ -47,7 +49,7 @@ export default function Journal(){
 
 
     return  (
-        <div className={`flex flex-column justify-center ${openStyles}`} onClick={handleClick}>
+        <div className={`flex flex-column justify-center journal ${openStyles}`}>
             <JournalSwitcher />
         </div>
     )
