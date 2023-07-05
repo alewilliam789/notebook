@@ -8,7 +8,9 @@ export default function Journal(){
 
     const {user} = useUserContext()
 
-    const [open, setOpen] = useState(false);
+    const [open, setOpen] = useState<boolean>(false);
+
+    const [openStyles, setOpenStyles] = useState<string>("journal");
 
 
 
@@ -16,6 +18,7 @@ export default function Journal(){
 
         if(!open){
             setOpen(true)
+            setOpenStyles("journal-open bg-day")
         }
     }
 
@@ -44,7 +47,7 @@ export default function Journal(){
 
 
     return  (
-        <div className="bg-navy w-[700px] h-[800px] mx-auto flex flex-column justify-center rounded-xl journal" onClick={handleClick}>
+        <div className={`flex flex-column justify-center ${openStyles}`} onClick={handleClick}>
             <JournalSwitcher />
         </div>
     )

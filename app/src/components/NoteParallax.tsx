@@ -80,12 +80,26 @@ export default function NoteParallax(){
             )
         })
 
+        noteParallaxList.push(
+
+                <FormProvider key={"blank"} isAdd={isAdd} setIsAdd={setIsAdd}>
+                    <NoteProvider passedNote={{
+                        _id: "blank",
+                        title: "",
+                        body: "",
+                        userName: ""
+                    }}>
+                        <Page offset={noteParallaxList.length+1}/>
+                    </NoteProvider>
+                </FormProvider>
+        )
+
         return (
             <div className='p-10 flex flex-col gap-6'>
                 <div className='py-10 self-end'>
                     {/* <ActionButton handleClick={()=>{setIsAdd(true)}} icon={<img className="self-center" src={addLogo} alt="Edit" />}/> */}
                 </div>
-                <Parallax pages={noteParallaxList.length+1} ref={parallaxRef} horizontal>
+                <Parallax pages={noteParallaxList.length+1} ref={parallaxRef} horizontal className='binding'>
                     {noteParallaxList}
                 </Parallax>
             </div>
