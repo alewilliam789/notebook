@@ -22,7 +22,7 @@ export default function Page({ offset, handleClick, last} : PageProps){
         return(
             <>
             <ParallaxLayer offset={offset} speed={1.0} className="flex gap-6">
-                {offset == 0 ? null : <ActionButton icon={<img className="self-center" src={leftLogo} alt="Left" />} handleClick={handleClick} />}
+                {offset == 0 ? null : <ActionButton icon={leftLogo} action="Left" handleClick={handleClick} />}
                 <NotePanel />
             </ParallaxLayer>
             </>)
@@ -32,7 +32,7 @@ export default function Page({ offset, handleClick, last} : PageProps){
         <>
         <ParallaxLayer offset={offset} speed={1.0} className="flex gap-6">
             <NotePanel />
-            <ActionButton icon={<img className="self-center" src={rightLogo} alt="Right" />} handleClick={handleClick} />
+            <ActionButton icon={rightLogo} action="Right" handleClick={handleClick} />
         </ParallaxLayer>
         </>)
 };

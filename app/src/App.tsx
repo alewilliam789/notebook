@@ -14,12 +14,12 @@ export default function App(): React.JSX.Element {
 
   return (
     <>
-      <main className="pb-20 w-screen h-screen bg-day flex flex-col align-center gap-6">
+      <main className="pb-12 w-screen h-screen bg-day flex flex-col align-center gap-6">
         <div className="m-6 self-end">
           <ActionButton action="Logout" handleClick={()=>{
             localStorage.clear()
             navigate('/')
-          }} icon={<img className="self-center" src={logoutLogo} alt="Logout" />} />
+          }} icon={logoutLogo} />
         </div>
           <Journal />
       </main>

@@ -93,7 +93,7 @@ export default function NoteParallax(){
 
         return (
             <div className='p-10 flex flex-col justify-center gap-6'>
-                <div className='relative h-[800px] w-[900px]'>
+                <div className='relative h-[800px] w-[1000px]'>
                     <Parallax pages={noteParallaxList.length} ref={parallaxRef} horizontal className='binding'>
                         {noteParallaxList}
                     </Parallax>

@@ -43,8 +43,8 @@ export default function NotePanel() {
             <div className="flex justify-center content-center">
                     <section className="w-full h-full rounded-sm content">
                             <div className="p-10 flex justify-end gap-6 ">
-                                <ActionButton handleClick={state.add ? null : ()=>{dispatch({type:"edit"})}} icon={<img className="self-center" src={editLogo} alt="Edit" />} />
-                                <ActionButton handleClick={state.add ? null : ()=>{dispatch({type:"delete"})}} icon={<img className= "self-center" src={deleteLogo} alt="Delete" />} />
+                                <ActionButton handleClick={state.add ? null : ()=>{dispatch({type:"edit"})}} icon={editLogo} action="Edit" />
+                                <ActionButton handleClick={state.add ? null : ()=>{dispatch({type:"delete"})}} icon={deleteLogo} action="Delete"/>
                             </div>
                         <NoteSwitcher />
                     </section>
