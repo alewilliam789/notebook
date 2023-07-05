@@ -75,7 +75,7 @@ export default function NoteForm(){
         if(state.delete){
             return (
             <>
-                <label className="mb-16 font-bold text-center text-2xl pb-10">Are you sure you want to delete this note?</label>
+                <label className="mb-10 font-bold text-center text-2xl">Are you sure you want to delete this note?</label>
             </>
             )
         }

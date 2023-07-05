@@ -30,7 +30,7 @@ export default function NoteParallax(){
 
 
 
-    const {data, isFetching, isLoading} = useNotes(user);
+    const {data} = useNotes(user);
     const queryClient = useQueryClient();
 
 
@@ -53,18 +53,6 @@ export default function NoteParallax(){
             if(parallaxRef.current){
                 parallaxRef.current.scrollTo(page)
             }
-        }
-
-
-
-        if(isFetching || isLoading){
-            return (
-                <div className='pt-32 flex justify-center'>
-                    <ThreeDots 
-                      color= '#EF4444' 
-                    />
-                </div>
-            )
         }
 
 

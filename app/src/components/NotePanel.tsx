@@ -39,7 +39,7 @@ export default function NotePanel() {
 
     return(
         <>
-        <div className='w-[900px] h-[800px] bg-white rounded-sm note-shadow pattern'>
+        <div className={`w-[900px] h-[800px] bg-white rounded-sm note-shadow ${state.add || state.edit || state.delete ? "" : "pattern"}`}>
             <div className="flex justify-center content-center">
                     <section className="w-full h-full rounded-sm content">
                             <div className="p-10 flex justify-end gap-6 ">
