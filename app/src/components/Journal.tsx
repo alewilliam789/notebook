@@ -30,13 +30,7 @@ export default function Journal(){
         if(open){
             return (
             <>
-                <div className='flex flex-column'>
-                    <ActionButton icon={exitLogo} handleClick={()=>{
-                        setOpen(false);
-                        setOpenStyles("journal closed")
-                     }} action='Exit' />
                     <NoteParallax />
-                </div>
             </>)
         }
         else{
@@ -58,6 +52,10 @@ export default function Journal(){
     return  (
         <div className={`flex flex-column justify-center ${openStyles}`} onClick={open ? ()=>{} : handleClick}>
             <JournalSwitcher />
+            <div>{open ? <ActionButton icon={exitLogo} handleClick={()=>{
+                        setOpen(false);
+                        setOpenStyles("journal closed")
+                     }} action='Exit' />: null}</div>
         </div>
     )
 }
