@@ -1,6 +1,12 @@
 import { ParallaxLayer } from "@react-spring/parallax";
+
+
+
 import NotePanel from './NotePanel';
 import ActionButton from "./ActionButton";
+
+import leftLogo from '../assets/icons/left.png';
+import rightLogo from '../assets/icons/right.png';
 
 
 
@@ -16,7 +22,7 @@ export default function Page({ offset, handleClick, last} : PageProps){
         return(
             <>
             <ParallaxLayer offset={offset} speed={1.0} className="flex gap-6">
-                {offset == 0 ? null : <ActionButton icon={"<"} handleClick={handleClick} />}
+                {offset == 0 ? null : <ActionButton icon={<img className="self-center" src={leftLogo} alt="Left" />} handleClick={handleClick} />}
                 <NotePanel />
             </ParallaxLayer>
             </>)
@@ -26,7 +32,7 @@ export default function Page({ offset, handleClick, last} : PageProps){
         <>
         <ParallaxLayer offset={offset} speed={1.0} className="flex gap-6">
             <NotePanel />
-            <ActionButton icon={">"} handleClick={handleClick} />
+            <ActionButton icon={<img className="self-center" src={rightLogo} alt="Right" />} handleClick={handleClick} />
         </ParallaxLayer>
         </>)
 };
