@@ -36,7 +36,7 @@ export default function Journal(){
         else{
             return (
                 <>
-                    <div className="h-32 w-64 mt-32 flex justify-center bg-white">
+                    <div className="px-2 h-32 w-max mt-32 flex justify-center bg-white">
                          <div className="self-center">
                             <VaraText text={`Hello ${user}`} />
                         </div>

@@ -80,8 +80,8 @@ export default function Signup(){
 
             <input className="border-b-2 border-gray-300 font-mono focus:outline-none" placeholder="Confirm Password" type="password" {...register("confirmPassword", {required: "This field is required", validate : validatePassword})} />
             <p className="text-red-600 italic font-thin text-sm">{handleUserVerification()}</p>
-            <SubmitButton />
-            <Link className="text-sm text-center" to={"/login"}>Already have an account? Login</Link>
+            <SubmitButton buttonText="Signup"/>
+            <Link className="text-sm text-center" to={"/"}>Already have an account? Login</Link>
     </form>
     </div>
     </>

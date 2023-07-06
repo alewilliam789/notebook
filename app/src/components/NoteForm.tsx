@@ -102,7 +102,7 @@ export default function NoteForm(){
                         }}>X</button>
                 </div>
                 <FormText />
-                <SubmitButton />
+                <SubmitButton buttonText="Submit"/>
         </form>
         </>
     )
