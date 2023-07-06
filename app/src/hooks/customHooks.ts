@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { useQuery, useMutation, QueryClient} from "@tanstack/react-query";
 
 import { NoteData, FormData } from "../type";
@@ -15,32 +14,6 @@ export function useNote(_id :string) {
 export function useNotes(user : string) { 
         return  useQuery<NoteData[], Error>(['notes'], ()=>fetchNotes(user));
 }
-
-type cachedReturn = [NoteData, React.Dispatch<React.SetStateAction<NoteData>>];
-
-
-
-
-
-export function useCachedNote(){
-       const [cachedNote,setCachedNote] = useState<NoteData>({"_id" : "", "title":"","body":""});
-       useEffect(()=>{
-        const localNote = JSON.parse(localStorage.getItem('note')||"")
-        if(localNote){
-                setCachedNote((prevNote)=>{
-                        return {
-                          ...prevNote,
-                          ...localNote
-                        }
-                })
-        }
-       },[])
-
-       const cachedReturn : cachedReturn = [cachedNote,setCachedNote];
-       return cachedReturn
-}
-
-
 
 interface Mutate {
         data : FormData,

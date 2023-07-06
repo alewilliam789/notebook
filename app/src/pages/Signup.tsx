@@ -44,7 +44,7 @@ export default function Signup(){
 
     async function onSubmit(data: FormValues) {
 
-            let response = await fetch('https://tayjournal-api.herokuapp.com/users/register',
+            const response = await fetch('https://tayjournal-api.herokuapp.com/users/register',
                         {
                             method: "POST",
                             headers: {'Content-Type':'application/json'},

@@ -84,7 +84,7 @@ export default function NoteParallax(){
                                 body: "",
                                 userName: user
                             }}>
-                                <Page offset={0} leftClick={()=>{}} rightClick={()=>{}} />
+                                <Page offset={0} leftClick={null} rightClick={null} />
                             </NoteProvider>
                 </FormProvider>);
 

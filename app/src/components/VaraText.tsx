@@ -25,7 +25,7 @@ export default function VaraText({text}: VaraTextProps){
             );
             renderCount.current ++;
         }
-      }, []);
+      }, [text]);
     
       return <div id="vara-container"></div>;
-    };
+    }

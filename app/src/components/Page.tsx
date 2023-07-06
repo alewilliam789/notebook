@@ -14,8 +14,8 @@ import { useFormContext } from "../context/FormContext";
 
 interface PageProps {
     offset: number;
-    leftClick: () => void;
-    rightClick: () => void;
+    leftClick: (() => void) | null;
+    rightClick: (() => void) | null;
     last? : boolean;
   }
 
@@ -42,4 +42,4 @@ export default function Page({ offset, leftClick, rightClick, last} : PageProps)
             {offset == 0 && state.add ? null :<ActionButton icon={rightLogo} action="Right" handleClick={rightClick} position="self-center"/>}
         </ParallaxLayer>
         </>)
-};
+}

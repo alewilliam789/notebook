@@ -50,7 +50,7 @@ export default function Journal(){
 
 
     return  (
-        <div className={`flex flex-column justify-center ${openStyles}`} onClick={open ? ()=>{} : handleClick}>
+        <div className={`flex flex-column justify-center ${openStyles}`} onClick={open ? undefined : handleClick}>
             <JournalSwitcher />
             <div>{open ? <ActionButton icon={exitLogo} handleClick={()=>{
                         setOpen(false);
