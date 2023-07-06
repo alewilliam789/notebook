@@ -12,7 +12,7 @@ export default function VaraText({text}: VaraTextProps){
 
     useEffect(() => {
         if (renderCount.current <1){
-            new Vara(
+            const vara = new Vara(
             "#vara-container",
             "https://raw.githubusercontent.com/akzhy/Vara/master/fonts/Satisfy/SatisfySL.json",
             [
