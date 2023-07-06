@@ -50,14 +50,13 @@ interface Mutate {
 export function useAddNote(queryClient : QueryClient){
         return useMutation(
                 {
-                    mutationFn: ({data, user} : Mutate) =>{
+                    mutationFn: ({data, user} : Mutate) => {
                         return addNote(data,user)
                     },
-                    onSuccess: ()=>{
-                        queryClient.refetchQueries();
-
+                    onSuccess : () => {
+                        queryClient.resetQueries();
                     },
-                    onError: (e: Error) =>{
+                    onError: (e: Error) => {
                         throw new Error(e.message.toString())
                     }
                 }
@@ -67,7 +66,7 @@ export function useAddNote(queryClient : QueryClient){
 export function useEditNote(queryClient : QueryClient, _id : string, setCurrentNote : React.Dispatch<React.SetStateAction<NoteData>>){
         return useMutation(
                 {
-                    mutationFn : ({data, user}: Mutate) =>{
+                    mutationFn : ({data, user}: Mutate) => {
                         setCurrentNote((prevNote)=>{
                                 return {
                                         ...prevNote,
@@ -76,10 +75,10 @@ export function useEditNote(queryClient : QueryClient, _id : string, setCurrentN
                         })
                         return editNote(data,_id, user)
                     },
-                    onSuccess : (data) =>{
+                    onSuccess : (data) => {
                         queryClient.setQueryData(['note',{id : data._id}],data)
                     },
-                    onError: (e: Error) =>{
+                    onError: (e: Error) => {
                         throw new Error(e.message.toString())
                     }
                 })
@@ -88,12 +87,14 @@ export function useEditNote(queryClient : QueryClient, _id : string, setCurrentN
 export function useDeleteNote(_id: string, queryClient : QueryClient){
         return useMutation({
                 mutationFn : () => {
+                    queryClient.removeQueries(['note',{id : _id}])
+                    queryClient.resetQueries();
                     return deleteNote(_id)
                 },
-                onSuccess : () =>{
+                onSuccess: () => {
                         queryClient.refetchQueries()
                 },
-                onError: (e: Error) =>{
+                onError: (e: Error) => {
                         throw new Error(e.message.toString())
                     }
             })

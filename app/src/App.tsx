@@ -4,7 +4,6 @@ import ActionButton from "./components/ActionButton";
 import Journal from "./components/Journal"
 
 import logoutLogo from './assets/icons/logout.png';
-import NoteParallax from "./components/NoteParallax";
 
 
 export default function App(): React.JSX.Element {
