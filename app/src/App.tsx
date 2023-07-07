@@ -13,11 +13,11 @@ export default function App(): React.JSX.Element {
 
   return (
     <>
-      <main className="py-12 px-5 w-screen h-[2000px] bg-day flex flex-col align-center gap-6 overflow-auto">
+      <main className="py-12 px-5 w-full h-[2000px] bg-day flex flex-col align-center gap-6 overflow-auto">
           <ActionButton action="Logout" handleClick={()=>{
             localStorage.clear()
             navigate('/')
-          }} icon={logoutLogo} position="self-end"/>
+          }} icon={logoutLogo} position="place-items-end"/>
           <Journal />
       </main>
     </>
