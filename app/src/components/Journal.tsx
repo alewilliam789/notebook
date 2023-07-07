@@ -55,7 +55,7 @@ export default function Journal(){
             <div>{open ? <ActionButton icon={exitLogo} handleClick={()=>{
                         setOpen(false);
                         setOpenStyles("journal closed")
-                     }} action='Exit' />: null}</div>
+                     }} action='Exit' position='self-end'/>: null}</div>
         </div>
     )
 }

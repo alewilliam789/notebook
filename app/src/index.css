@@ -36,11 +36,10 @@
 }
 .journal-open {
   background-color: rgb(4, 59, 92);
-  padding: 20px;
+  padding-top: 20px;
   margin-left: auto;
   margin-right: auto;
   border-radius: 0.75rem;
-  overflow: hidden;
   transition: all 1.0s ease-out;
 }
 
@@ -48,7 +47,7 @@
   content: '';
   position: relative;
   background-color: rgb(255, 255,255, 0.3);
-  height: 800px;
+  height: 100%;
   width: 60px;
   left: -700px;
   transform: skewX(-30deg);
@@ -62,8 +61,9 @@
 }
 
 .open {
-  height: 100%;
-  width: 70%;
+  height: 60%;
+  width: 75%;
+  min-width: 1050px;
   animation: none;
 }
 

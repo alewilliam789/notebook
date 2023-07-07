@@ -89,9 +89,9 @@ export default function NoteParallax(){
                 </FormProvider>);
 
         return (
-            <div className='p-10 flex flex-col justify-center gap-6'>
-                <ActionButton icon={addLogo} handleClick={()=>setIsAdd(true)} action='Add' />
-                <div className='relative h-[800px] w-[1000px]'>
+            <div className='p-10 flex flex-col justify-center self-start gap-6'>
+                <ActionButton icon={addLogo} handleClick={()=>setIsAdd(true)} action='Add' position='self-start' />
+                <div className='p-8 relative h-[900px] lg:w-[1200px] md:w-[800px] sm:w-[600px]'>
                     <Parallax pages={isAdd ? 1 : noteParallaxList.length} ref={parallaxRef} horizontal className={`binding animate__animated animate__fadeInLeft animate__delay-1s`}>
                         {isAdd ? addNoteParallax : noteParallaxList}
                     </Parallax>

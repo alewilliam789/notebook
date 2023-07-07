@@ -4,7 +4,17 @@ export default {
     './index.html',
     './src/**/*.{js,ts,jsx,tsx}',
   ],
-  theme: {},
+  theme: {
+    screens: {
+      'sm': '640px',
+
+      'md': '700px',
+      // => @media (min-width: 1024px) { ... }
+
+      'lg': '1280px',
+      // => @media (min-width: 1280px) { ... }
+    },
+  },
   plugins: [],
 }
 
