@@ -84,14 +84,14 @@ export default function NoteParallax(){
                                 body: "",
                                 userName: user
                             }}>
-                                <Page offset={0} leftClick={null} rightClick={null} />
+                                <Page offset={0} leftClick={undefined} rightClick={undefined} />
                             </NoteProvider>
                 </FormProvider>);
 
         return (
             <div className='p-10 flex flex-col justify-center self-start gap-6'>
-                <ActionButton icon={addLogo} handleClick={()=>setIsAdd(true)} action='Add' position='self-start' />
-                <div className='p-8 relative h-[900px] lg:w-[1200px] md:w-[800px] sm:w-[600px]'>
+                <ActionButton icon={addLogo} handleClick={()=>setIsAdd(true)} action='Add' position='self-start' transition='animate__animated animate__fadeIn animate__delay-1s' />
+                <div className='p-8 relative h-[900px] lg:w-[1200px] md:w-[800px] sm:w-[600px] min-w-[600px] overflow-hidden'>
                     <Parallax pages={isAdd ? 1 : noteParallaxList.length} ref={parallaxRef} horizontal className={`binding animate__animated animate__fadeInLeft animate__delay-1s`}>
                         {isAdd ? addNoteParallax : noteParallaxList}
                     </Parallax>

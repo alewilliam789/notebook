@@ -14,8 +14,8 @@ import { useFormContext } from "../context/FormContext";
 
 interface PageProps {
     offset: number;
-    leftClick: (() => void) | null;
-    rightClick: (() => void) | null;
+    leftClick: (() => void) | undefined;
+    rightClick: (() => void) | undefined;
     last? : boolean;
   }
 

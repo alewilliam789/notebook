@@ -45,8 +45,8 @@ export default function NotePanel() {
                             <div className="p-10 flex justify-end gap-6 ">
                                 { state.add ? null :
                                 (<>
-                                    <ActionButton handleClick={state.add ? null : ()=>{dispatch({type:"edit"})}} icon={editLogo} action="Edit" />
-                                    <ActionButton handleClick={state.add ? null : ()=>{dispatch({type:"delete"})}} icon={deleteLogo} action="Delete"/>
+                                    <ActionButton handleClick={state.add ? undefined : ()=>{dispatch({type:"edit"})}} icon={editLogo} action="Edit" />
+                                    <ActionButton handleClick={state.add ? undefined : ()=>{dispatch({type:"delete"})}} icon={deleteLogo} action="Delete"/>
                                  </>
                                     )}
                             </div>
